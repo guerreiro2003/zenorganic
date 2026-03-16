@@ -587,13 +587,7 @@
 const DEFAULTS = {
   password: 'zen2025',
   announcements: [],
-  gallery: [
-    { url: 'https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?auto=format&fit=crop&w=1200&q=80', alt: 'Foto 1' },
-    { url: 'https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?auto=format&fit=crop&w=1200&q=80', alt: 'Foto 2' },
-    { url: 'https://images.unsplash.com/photo-1522337660859-02fbefca4702?auto=format&fit=crop&w=1200&q=80', alt: 'Foto 3' },
-    { url: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=1200&q=80', alt: 'Foto 4' },
-    { url: 'https://images.unsplash.com/photo-1519419166318-4f5c601b7f9d?auto=format&fit=crop&w=1200&q=80', alt: 'Foto 5' },
-  ],
+  gallery: [],
   pricesWoman: [
     { name: 'Corte + Brushing', price: '35€' },
     { name: 'Brushing', price: '18€' },
@@ -741,7 +735,7 @@ const CLOUDINARY_PRESET = 'zen-organic';
 const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`;
 
 // ── GALLERY ──
-async function uploadToCloudinary(file, index, total) {
+async function uploadToCloudinary(file) {
   const formData = new FormData();
   formData.append('file', file);
   formData.append('upload_preset', CLOUDINARY_PRESET);
@@ -760,32 +754,48 @@ async function handleFiles(files) {
   const barEl      = document.getElementById('upload-bar');
   progressEl.style.display = 'block';
 
-  const list = get('gallery');
+  // Always read fresh from localStorage (not defaults)
+  let list = [];
+  try {
+    const stored = localStorage.getItem('zen_gallery');
+    if (stored) list = JSON.parse(stored);
+  } catch(e) { list = [] }
+
   let done = 0;
+  let errors = 0;
 
   for (const file of files) {
     statusEl.textContent = `A carregar ${done + 1} de ${files.length}... (${file.name})`;
     barEl.style.width = `${Math.round((done / files.length) * 100)}%`;
     try {
-      const url = await uploadToCloudinary(file, done, files.length);
-      list.push({ url, alt: file.name.replace(/\.[^.]+$/, '') });
+      const url = await uploadToCloudinary(file);
+      const altName = file.name.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ');
+      list.push({ url, alt: altName });
+      // Save after EACH photo so nothing is lost
+      localStorage.setItem('zen_gallery', JSON.stringify(list));
     } catch (e) {
+      console.error('Upload error:', e);
+      errors++;
       toast(`⚠️ Erro ao carregar ${file.name}`);
     }
     done++;
   }
 
+  const success = done - errors;
   barEl.style.width = '100%';
-  statusEl.textContent = `✓ ${done} foto(s) carregada(s) com sucesso!`;
-  save('gallery', list);
+  statusEl.textContent = `✓ ${success} foto(s) carregada(s) com sucesso!`;
+
   renderGallery();
   updateDashboard();
-  toast(`✓ ${done} foto(s) adicionada(s) à galeria!`);
+  if (success > 0) toast(`✓ ${success} foto(s) adicionada(s) à galeria!`);
 
   setTimeout(() => {
     progressEl.style.display = 'none';
     barEl.style.width = '0%';
   }, 3000);
+
+  // Reset file input so same file can be uploaded again
+  document.getElementById('fileInput').value = '';
 }
 
 function addPhotoByUrl() {
@@ -801,21 +811,33 @@ function addPhotoByUrl() {
 }
 
 function removePhoto(i) {
-  const list = get('gallery'); list.splice(i,1); save('gallery',list);
+  let list = [];
+  try {
+    const stored = localStorage.getItem('zen_gallery');
+    if (stored) list = JSON.parse(stored);
+  } catch(e) { list = [] }
+  list.splice(i, 1);
+  localStorage.setItem('zen_gallery', JSON.stringify(list));
   renderGallery(); updateDashboard(); toast('✓ Foto removida!');
 }
 
 function renderGallery() {
-  const list = get('gallery');
+  // Always read fresh from localStorage to avoid showing defaults
+  let list = [];
+  try {
+    const stored = localStorage.getItem('zen_gallery');
+    if (stored) list = JSON.parse(stored);
+  } catch(e) { list = [] }
+
   document.getElementById('gallery-count').textContent = list.length;
   const grid = document.getElementById('gallery-grid');
   if (!list.length) {
-    grid.innerHTML = '<p style="color:var(--muted);font-size:13px">Nenhuma foto ainda. Faz upload acima!</p>';
+    grid.innerHTML = '<p style="color:var(--muted);font-size:13px">Nenhuma foto ainda. Faz upload acima! 📷</p>';
     return;
   }
   grid.innerHTML = list.map((p,i) => `
     <div class="gallery-thumb">
-      <img src="${p.url}" alt="${p.alt}" onerror="this.style.opacity='.3'" />
+      <img src="${p.url}" alt="${p.alt}" onerror="this.parentElement.style.opacity='.4'" />
       <button class="remove-btn" onclick="removePhoto(${i})" title="Remover">✕</button>
     </div>
   `).join('');
