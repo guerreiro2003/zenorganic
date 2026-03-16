@@ -1,0 +1,862 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin · Zen Organic Hair Concept</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:      #f2ece1;
+      --bg-alt:  #ebe4d8;
+      --card:    #ede7db;
+      --text:    #28221a;
+      --muted:   #837468;
+      --accent:  #6b7c5a;
+      --accent2: #8f6e52;
+      --danger:  #b85c4a;
+      --line:    rgba(40,34,26,.12);
+      --r:       14px;
+      --shadow:  0 8px 28px rgba(40,34,26,.12);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0 }
+    body {
+      font-family: 'DM Sans', sans-serif; font-size: 14px;
+      background: var(--bg); color: var(--text); line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    /* ── LOGIN ── */
+    #loginScreen {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      background: var(--bg);
+    }
+    .login-box {
+      background: var(--card); border: 1px solid var(--line);
+      border-radius: 22px; padding: 40px 36px; width: min(380px, 92%);
+      box-shadow: var(--shadow); text-align: center;
+    }
+    .login-box .logo {
+      width: 52px; height: 52px; border-radius: 14px;
+      background: linear-gradient(145deg, rgba(107,124,90,.2), rgba(107,124,90,.06));
+      border: 1px solid rgba(107,124,90,.3);
+      display: grid; place-items: center; margin: 0 auto 18px;
+      font-family: 'Cormorant Garamond', serif; font-size: 22px; color: var(--accent);
+    }
+    .login-box h1 { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: 26px; margin-bottom: 4px }
+    .login-box p { color: var(--muted); font-size: 13px; margin-bottom: 28px }
+    .login-box input {
+      width: 100%; padding: 12px 14px; border-radius: 10px;
+      border: 1px solid var(--line); background: rgba(242,236,225,.8);
+      font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--text);
+      outline: none; margin-bottom: 12px; transition: border-color .2s;
+    }
+    .login-box input:focus { border-color: rgba(107,124,90,.4) }
+    .login-box .err { color: var(--danger); font-size: 12px; margin-bottom: 10px; display: none }
+
+    /* ── ADMIN SHELL ── */
+    #adminApp { display: none; min-height: 100vh }
+    .admin-header {
+      position: sticky; top: 0; z-index: 40;
+      background: rgba(242,236,225,.9); backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--line);
+      padding: 12px 24px; display: flex; align-items: center; justify-content: space-between;
+    }
+    .admin-header .brand { display: flex; align-items: center; gap: 10px }
+    .admin-header .brand-mark {
+      width: 34px; height: 34px; border-radius: 9px;
+      background: linear-gradient(145deg, rgba(107,124,90,.18), rgba(107,124,90,.06));
+      border: 1px solid rgba(107,124,90,.28);
+      display: grid; place-items: center;
+      font-family: 'Cormorant Garamond', serif; font-size: 16px; color: var(--accent);
+    }
+    .admin-header .brand-name { font-weight: 500; font-size: 13.5px }
+    .admin-header .brand-sub { font-size: 11px; color: var(--muted) }
+    .admin-header .header-actions { display: flex; gap: 8px; align-items: center }
+
+    .admin-body { display: flex; min-height: calc(100vh - 58px) }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: 220px; flex-shrink: 0;
+      background: var(--bg-alt); border-right: 1px solid var(--line);
+      padding: 20px 12px;
+      position: sticky; top: 58px; height: calc(100vh - 58px); overflow-y: auto;
+    }
+    .sidebar-section { margin-bottom: 24px }
+    .sidebar-label { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding: 0 10px; margin-bottom: 6px; display: block }
+    .sidebar-link {
+      display: flex; align-items: center; gap: 9px;
+      padding: 9px 10px; border-radius: 9px;
+      color: var(--muted); font-size: 13.5px; cursor: pointer;
+      transition: background .15s, color .15s; border: none; background: none; width: 100%; text-align: left;
+    }
+    .sidebar-link:hover { background: rgba(40,34,26,.06); color: var(--text) }
+    .sidebar-link.active { background: rgba(107,124,90,.12); color: var(--accent); font-weight: 500 }
+    .sidebar-link .icon { font-size: 16px; width: 20px; text-align: center }
+
+    /* ── MAIN CONTENT ── */
+    .admin-main { flex: 1; padding: 28px 32px; overflow-y: auto }
+    .panel { display: none }
+    .panel.active { display: block }
+
+    .panel-title { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: 28px; margin-bottom: 4px }
+    .panel-sub { color: var(--muted); margin-bottom: 24px; font-size: 13px }
+
+    /* ── CARDS ── */
+    .admin-card {
+      background: var(--card); border: 1px solid var(--line);
+      border-radius: var(--r); padding: 22px; margin-bottom: 16px;
+      box-shadow: 0 2px 12px rgba(40,34,26,.06);
+    }
+    .admin-card h3 { font-size: 15px; font-weight: 500; margin-bottom: 14px; display: flex; align-items: center; gap: 8px }
+    .admin-card h3 .badge-count {
+      background: var(--accent); color: #f7f4ee;
+      font-size: 11px; padding: 1px 7px; border-radius: 999px; font-weight: 600;
+    }
+
+    /* ── FORM ELEMENTS ── */
+    .form-row { margin-bottom: 14px }
+    .form-row label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 5px; letter-spacing: .02em }
+    .form-row input, .form-row textarea, .form-row select {
+      width: 100%; padding: 10px 12px; border-radius: 9px;
+      border: 1px solid var(--line); background: rgba(242,236,225,.8);
+      font-family: 'DM Sans', sans-serif; font-size: 13.5px; color: var(--text);
+      outline: none; transition: border-color .2s;
+    }
+    .form-row input:focus, .form-row textarea:focus, .form-row select:focus { border-color: rgba(107,124,90,.4) }
+    .form-row textarea { resize: vertical; min-height: 80px }
+    .form-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px }
+    .form-cols-3 { display: grid; grid-template-columns: 1fr 1fr auto; gap: 12px; align-items: end }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 9px 18px; border-radius: 999px;
+      border: 1px solid var(--line); font-family: 'DM Sans', sans-serif;
+      font-size: 13px; font-weight: 500; cursor: pointer;
+      transition: transform .12s, background .12s, box-shadow .12s; white-space: nowrap;
+    }
+    .btn:hover { transform: translateY(-1px) }
+    .btn-primary { background: var(--accent); color: #f7f4ee; border-color: transparent; box-shadow: 0 3px 12px rgba(107,124,90,.25) }
+    .btn-primary:hover { background: #5d6e4d; box-shadow: 0 5px 18px rgba(107,124,90,.35) }
+    .btn-ghost { background: rgba(40,34,26,.06); color: var(--text-2) }
+    .btn-ghost:hover { background: rgba(40,34,26,.10) }
+    .btn-danger { background: rgba(184,92,74,.1); color: var(--danger); border-color: rgba(184,92,74,.2) }
+    .btn-danger:hover { background: rgba(184,92,74,.18) }
+    .btn-sm { padding: 6px 12px; font-size: 12px }
+    .btn-icon { padding: 7px 9px; border-radius: 9px }
+
+    /* ── TOAST ── */
+    #toast {
+      position: fixed; bottom: 24px; right: 24px; z-index: 1000;
+      background: var(--text); color: var(--bg); padding: 12px 20px;
+      border-radius: 10px; font-size: 13px; font-weight: 500;
+      opacity: 0; transform: translateY(10px);
+      transition: opacity .25s, transform .25s; pointer-events: none;
+    }
+    #toast.show { opacity: 1; transform: translateY(0) }
+
+    /* ── PROMO BANNER PREVIEW ── */
+    .promo-preview {
+      border-radius: 10px; padding: 12px 18px; margin-bottom: 16px;
+      font-size: 13.5px; font-weight: 500; text-align: center;
+      display: none;
+    }
+    .promo-preview.show { display: block }
+
+    /* ── PRICE TABLE ── */
+    .price-table { width: 100%; border-collapse: collapse }
+    .price-table th { text-align: left; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding: 0 8px 10px; font-weight: 500 }
+    .price-table td { padding: 6px 4px; vertical-align: middle }
+    .price-table tr { border-bottom: 1px solid var(--line) }
+    .price-table tr:last-child { border-bottom: none }
+    .price-table input { padding: 7px 10px; font-size: 13px }
+    .price-table .name-col { width: 60% }
+    .price-table .price-col { width: 25% }
+    .price-table .action-col { width: 15%; text-align: right }
+
+    /* ── GALLERY GRID ── */
+    .gallery-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 10px; margin-bottom: 16px;
+    }
+    .gallery-thumb {
+      position: relative; aspect-ratio: 4/3;
+      border-radius: 10px; overflow: hidden;
+      border: 1px solid var(--line); background: var(--bg-alt);
+    }
+    .gallery-thumb img { width: 100%; height: 100%; object-fit: cover; display: block }
+    .gallery-thumb .remove-btn {
+      position: absolute; top: 6px; right: 6px;
+      background: rgba(40,34,26,.7); color: #f2ece1;
+      border: none; border-radius: 6px; width: 24px; height: 24px;
+      font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity .2s;
+    }
+    .gallery-thumb:hover .remove-btn { opacity: 1 }
+    .gallery-add {
+      aspect-ratio: 4/3; border-radius: 10px;
+      border: 2px dashed var(--line); background: transparent;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 6px; cursor: pointer; color: var(--muted); font-size: 12px;
+      transition: border-color .2s, background .2s;
+    }
+    .gallery-add:hover { border-color: var(--accent); background: rgba(107,124,90,.05); color: var(--accent) }
+    .gallery-add .add-icon { font-size: 24px }
+
+    /* ── STATUS TOGGLE ── */
+    .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--line) }
+    .toggle-row:last-child { border-bottom: none }
+    .toggle-label { font-size: 13.5px }
+    .toggle-sub { font-size: 11.5px; color: var(--muted); margin-top: 2px }
+    .toggle {
+      position: relative; width: 42px; height: 24px;
+      flex-shrink: 0;
+    }
+    .toggle input { opacity: 0; width: 0; height: 0 }
+    .toggle-slider {
+      position: absolute; inset: 0; cursor: pointer;
+      background: rgba(40,34,26,.15); border-radius: 999px;
+      transition: background .2s;
+    }
+    .toggle-slider::before {
+      content: ''; position: absolute;
+      width: 18px; height: 18px; border-radius: 50%;
+      background: white; bottom: 3px; left: 3px;
+      transition: transform .2s; box-shadow: 0 1px 4px rgba(0,0,0,.2);
+    }
+    .toggle input:checked + .toggle-slider { background: var(--accent) }
+    .toggle input:checked + .toggle-slider::before { transform: translateX(18px) }
+
+    /* ── ANNOUNCEMENTS ── */
+    .announcement-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 12px; background: var(--bg-alt);
+      border-radius: 10px; border: 1px solid var(--line); margin-bottom: 8px;
+    }
+    .announcement-item .ann-body { flex: 1 }
+    .announcement-item .ann-title { font-weight: 500; font-size: 13.5px }
+    .announcement-item .ann-text { color: var(--muted); font-size: 12.5px; margin-top: 2px }
+    .announcement-item .ann-type {
+      font-size: 10.5px; padding: 2px 8px; border-radius: 999px;
+      font-weight: 600; letter-spacing: .04em; text-transform: uppercase;
+    }
+    .type-promo { background: rgba(107,124,90,.15); color: var(--accent) }
+    .type-aviso { background: rgba(143,110,82,.15); color: var(--accent2) }
+    .type-info  { background: rgba(40,34,26,.08);   color: var(--muted) }
+
+    /* ── LIVE LINK ── */
+    .live-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(107,124,90,.1); color: var(--accent);
+      border: 1px solid rgba(107,124,90,.2); border-radius: 999px;
+      padding: 5px 12px; font-size: 12px; font-weight: 500;
+      text-decoration: none; transition: background .15s;
+    }
+    .live-link:hover { background: rgba(107,124,90,.18) }
+    .live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2.5s infinite }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.6)} }
+
+    /* ── DASHBOARD STATS ── */
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 20px }
+    .stat-card {
+      background: var(--card); border: 1px solid var(--line); border-radius: var(--r);
+      padding: 18px; box-shadow: 0 2px 10px rgba(40,34,26,.06);
+    }
+    .stat-label { font-size: 11px; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 6px }
+    .stat-value { font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 300; line-height: 1 }
+    .stat-sub { font-size: 11.5px; color: var(--muted); margin-top: 3px }
+
+    @media (max-width: 700px) {
+      .sidebar { display: none }
+      .admin-main { padding: 18px 16px }
+      .form-cols, .form-cols-3 { grid-template-columns: 1fr }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── LOGIN ── -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="logo">Z</div>
+    <h1>Área de Administração</h1>
+    <p>Zen Organic Hair Concept · Telheiras</p>
+    <input type="password" id="pwInput" placeholder="Password" />
+    <p class="err" id="loginErr">Password incorreta. Tenta novamente.</p>
+    <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="doLogin()">Entrar</button>
+  </div>
+</div>
+
+<!-- ── ADMIN APP ── -->
+<div id="adminApp">
+  <header class="admin-header">
+    <div class="brand">
+      <div class="brand-mark">Z</div>
+      <div>
+        <div class="brand-name">Zen Organic · Admin</div>
+        <div class="brand-sub">Painel de gestão</div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <a class="live-link" href="index.html" target="_blank">
+        <span class="live-dot"></span> Ver site
+      </a>
+      <button class="btn btn-ghost btn-sm" onclick="doLogout()">Sair</button>
+    </div>
+  </header>
+
+  <div class="admin-body">
+    <!-- Sidebar -->
+    <nav class="sidebar">
+      <div class="sidebar-section">
+        <span class="sidebar-label">Geral</span>
+        <button class="sidebar-link active" onclick="showPanel('dashboard', this)">
+          <span class="icon">◈</span> Dashboard
+        </button>
+      </div>
+      <div class="sidebar-section">
+        <span class="sidebar-label">Conteúdo</span>
+        <button class="sidebar-link" onclick="showPanel('announcements', this)">
+          <span class="icon">◉</span> Anúncios & Promoções
+        </button>
+        <button class="sidebar-link" onclick="showPanel('gallery', this)">
+          <span class="icon">◇</span> Galeria de Fotos
+        </button>
+        <button class="sidebar-link" onclick="showPanel('prices', this)">
+          <span class="icon">◎</span> Tabela de Preços
+        </button>
+        <button class="sidebar-link" onclick="showPanel('schedule', this)">
+          <span class="icon">✦</span> Horários
+        </button>
+      </div>
+      <div class="sidebar-section">
+        <span class="sidebar-label">Configurações</span>
+        <button class="sidebar-link" onclick="showPanel('settings', this)">
+          <span class="icon">⊕</span> Configurações
+        </button>
+      </div>
+    </nav>
+
+    <!-- Main -->
+    <main class="admin-main">
+
+      <!-- DASHBOARD -->
+      <div class="panel active" id="panel-dashboard">
+        <div class="panel-title">Olá! 👋</div>
+        <p class="panel-sub">O que queres atualizar hoje no site?</p>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">Fotos na galeria</div>
+            <div class="stat-value" id="stat-photos">0</div>
+            <div class="stat-sub">imagens publicadas</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Anúncios ativos</div>
+            <div class="stat-value" id="stat-announcements">0</div>
+            <div class="stat-sub">visíveis no site</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Serviços</div>
+            <div class="stat-value" id="stat-prices">0</div>
+            <div class="stat-sub">preços configurados</div>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <h3>Ações rápidas</h3>
+          <div style="display:flex; gap:10px; flex-wrap:wrap">
+            <button class="btn btn-primary" onclick="showPanel('announcements', document.querySelector('[onclick*=announcements]'))">+ Nova promoção</button>
+            <button class="btn btn-ghost"   onclick="showPanel('gallery',       document.querySelector('[onclick*=gallery]'))">+ Adicionar foto</button>
+            <button class="btn btn-ghost"   onclick="showPanel('prices',        document.querySelector('[onclick*=prices]'))">Editar preços</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ANÚNCIOS & PROMOÇÕES -->
+      <div class="panel" id="panel-announcements">
+        <div class="panel-title">Anúncios & Promoções</div>
+        <p class="panel-sub">Cria banners e promoções que aparecem no site. Os clientes veem logo ao abrir a página.</p>
+
+        <div class="admin-card">
+          <h3>Novo anúncio</h3>
+          <div class="form-cols">
+            <div class="form-row">
+              <label>Título</label>
+              <input id="ann-title" type="text" placeholder="ex: Promoção de Verão 🌿" />
+            </div>
+            <div class="form-row">
+              <label>Tipo</label>
+              <select id="ann-type">
+                <option value="promo">🎉 Promoção</option>
+                <option value="aviso">⚠️ Aviso</option>
+                <option value="info">ℹ️ Informação</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <label>Texto (aparece no site)</label>
+            <textarea id="ann-text" placeholder="ex: Desconto de 20% em coloração durante todo o mês de julho!"></textarea>
+          </div>
+          <div class="form-row">
+            <label>Link do botão (opcional)</label>
+            <input id="ann-link" type="url" placeholder="https://..." />
+          </div>
+          <div style="display:flex; gap:10px; margin-top:4px">
+            <div class="form-row" style="flex:1;margin:0">
+              <label>Texto do botão</label>
+              <input id="ann-btn" type="text" placeholder="ex: Marcar agora" />
+            </div>
+            <div class="form-row" style="margin:0; display:flex; align-items:flex-end">
+              <button class="btn btn-primary" onclick="addAnnouncement()">Publicar anúncio</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <h3>Anúncios publicados <span class="badge-count" id="ann-count">0</span></h3>
+          <div id="ann-list"><p style="color:var(--muted);font-size:13px">Nenhum anúncio criado ainda.</p></div>
+        </div>
+      </div>
+
+      <!-- GALERIA -->
+      <div class="panel" id="panel-gallery">
+        <div class="panel-title">Galeria de Fotos</div>
+        <p class="panel-sub">Adiciona, remove e organiza as fotos que aparecem na galeria do site.</p>
+
+        <div class="admin-card">
+          <h3>Adicionar foto</h3>
+          <div class="form-cols">
+            <div class="form-row">
+              <label>Link da foto (URL)</label>
+              <input id="gallery-url" type="url" placeholder="https://..." />
+            </div>
+            <div class="form-row">
+              <label>Descrição (para acessibilidade)</label>
+              <input id="gallery-alt" type="text" placeholder="ex: Corte bob com franja" />
+            </div>
+          </div>
+          <p style="color:var(--muted);font-size:12px;margin-bottom:12px">
+            💡 Dica: tira as fotos, envia para o Google Drive ou Instagram e copia o link direto.
+          </p>
+          <button class="btn btn-primary" onclick="addPhoto()">Adicionar à galeria</button>
+        </div>
+
+        <div class="admin-card">
+          <h3>Fotos na galeria <span class="badge-count" id="gallery-count">0</span></h3>
+          <div class="gallery-grid" id="gallery-grid">
+            <button class="gallery-add" onclick="document.getElementById('gallery-url').focus(); showPanel('gallery', document.querySelector('[onclick*=gallery]'))">
+              <span class="add-icon">+</span>
+              <span>Adicionar foto</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PREÇOS -->
+      <div class="panel" id="panel-prices">
+        <div class="panel-title">Tabela de Preços</div>
+        <p class="panel-sub">Edita os preços e serviços. As alterações aparecem no site imediatamente após guardar.</p>
+
+        <div class="admin-card">
+          <h3>Mulher</h3>
+          <table class="price-table">
+            <thead><tr><th class="name-col">Serviço</th><th class="price-col">Preço</th><th class="action-col"></th></tr></thead>
+            <tbody id="prices-woman"></tbody>
+          </table>
+          <button class="btn btn-ghost btn-sm" style="margin-top:12px" onclick="addPriceRow('woman')">+ Adicionar serviço</button>
+        </div>
+
+        <div class="admin-card">
+          <h3>Homem</h3>
+          <table class="price-table">
+            <thead><tr><th class="name-col">Serviço</th><th class="price-col">Preço</th><th class="action-col"></th></tr></thead>
+            <tbody id="prices-man"></tbody>
+          </table>
+          <button class="btn btn-ghost btn-sm" style="margin-top:12px" onclick="addPriceRow('man')">+ Adicionar serviço</button>
+        </div>
+
+        <button class="btn btn-primary" onclick="savePrices()">💾 Guardar preços</button>
+      </div>
+
+      <!-- HORÁRIOS -->
+      <div class="panel" id="panel-schedule">
+        <div class="panel-title">Horários</div>
+        <p class="panel-sub">Define o horário de funcionamento que aparece no site.</p>
+
+        <div class="admin-card">
+          <h3>Horário semanal</h3>
+          <div id="schedule-rows"></div>
+          <button class="btn btn-primary" style="margin-top:16px" onclick="saveSchedule()">💾 Guardar horário</button>
+        </div>
+      </div>
+
+      <!-- CONFIGURAÇÕES -->
+      <div class="panel" id="panel-settings">
+        <div class="panel-title">Configurações</div>
+        <p class="panel-sub">Opções gerais do site e da conta.</p>
+
+        <div class="admin-card">
+          <h3>Informações do salão</h3>
+          <div class="form-cols">
+            <div class="form-row">
+              <label>Nome do salão</label>
+              <input id="cfg-name" type="text" />
+            </div>
+            <div class="form-row">
+              <label>Morada</label>
+              <input id="cfg-address" type="text" />
+            </div>
+          </div>
+          <div class="form-cols">
+            <div class="form-row">
+              <label>Email de contacto</label>
+              <input id="cfg-email" type="email" />
+            </div>
+            <div class="form-row">
+              <label>Link do Zappy</label>
+              <input id="cfg-zappy" type="url" placeholder="https://zappy.pt/..." />
+            </div>
+          </div>
+          <div class="form-cols">
+            <div class="form-row">
+              <label>Instagram</label>
+              <input id="cfg-instagram" type="url" placeholder="https://instagram.com/..." />
+            </div>
+            <div class="form-row">
+              <label>Facebook</label>
+              <input id="cfg-facebook" type="url" placeholder="https://facebook.com/..." />
+            </div>
+          </div>
+          <button class="btn btn-primary" onclick="saveSettings()">💾 Guardar configurações</button>
+        </div>
+
+        <div class="admin-card">
+          <h3>Alterar password</h3>
+          <div class="form-cols">
+            <div class="form-row">
+              <label>Nova password</label>
+              <input id="new-pw" type="password" placeholder="Nova password" />
+            </div>
+            <div class="form-row">
+              <label>Confirmar</label>
+              <input id="new-pw2" type="password" placeholder="Repetir password" />
+            </div>
+          </div>
+          <button class="btn btn-ghost" onclick="changePassword()">Alterar password</button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<div id="toast">✓ Guardado com sucesso!</div>
+
+<script>
+// ── DEFAULTS ──
+const DEFAULTS = {
+  password: 'zen2025',
+  announcements: [],
+  gallery: [
+    { url: 'https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?auto=format&fit=crop&w=1200&q=80', alt: 'Foto 1' },
+    { url: 'https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?auto=format&fit=crop&w=1200&q=80', alt: 'Foto 2' },
+    { url: 'https://images.unsplash.com/photo-1522337660859-02fbefca4702?auto=format&fit=crop&w=1200&q=80', alt: 'Foto 3' },
+    { url: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=1200&q=80', alt: 'Foto 4' },
+    { url: 'https://images.unsplash.com/photo-1519419166318-4f5c601b7f9d?auto=format&fit=crop&w=1200&q=80', alt: 'Foto 5' },
+  ],
+  pricesWoman: [
+    { name: 'Corte + Brushing', price: '35€' },
+    { name: 'Brushing', price: '18€' },
+    { name: 'Coloração (a partir de)', price: '45€' },
+    { name: 'Madeixas (a partir de)', price: '70€' },
+    { name: 'Tratamento (a partir de)', price: '25€' },
+  ],
+  pricesMan: [
+    { name: 'Corte', price: '18€' },
+    { name: 'Corte + Barba', price: '25€' },
+    { name: 'Barba', price: '12€' },
+    { name: 'Tratamento couro cabeludo', price: '20€' },
+  ],
+  schedule: [
+    { day: 'Segunda', open: '10:00', close: '19:00', closed: false },
+    { day: 'Terça',   open: '10:00', close: '19:00', closed: false },
+    { day: 'Quarta',  open: '10:00', close: '19:00', closed: false },
+    { day: 'Quinta',  open: '10:00', close: '19:00', closed: false },
+    { day: 'Sexta',   open: '10:00', close: '19:00', closed: false },
+    { day: 'Sábado',  open: '10:00', close: '18:00', closed: false },
+    { day: 'Domingo', open: '',      close: '',      closed: true  },
+  ],
+  settings: {
+    name: 'Zen Organic Hair Concept',
+    address: 'R. Prof. Francisco Gentil 16A, 1600-236 Lisboa',
+    email: 'email-do-salao@exemplo.com',
+    zappy: 'https://EXEMPLO-LINK-ZAPPY',
+    instagram: 'https://instagram.com/zenorganicconcept',
+    facebook: 'https://facebook.com/zenorganicconcept',
+  }
+};
+
+// ── STORAGE HELPERS ──
+const load = (k) => { try { const v = localStorage.getItem('zen_'+k); return v ? JSON.parse(v) : null } catch { return null } };
+const save = (k, v) => localStorage.setItem('zen_'+k, JSON.stringify(v));
+const get  = (k) => load(k) ?? DEFAULTS[k];
+
+// ── LOGIN ──
+const PASS_KEY = 'zen_admin_pw';
+function getPass() { return localStorage.getItem(PASS_KEY) || DEFAULTS.password }
+
+document.getElementById('pwInput').addEventListener('keydown', e => { if(e.key==='Enter') doLogin() });
+function doLogin() {
+  const pw = document.getElementById('pwInput').value;
+  if (pw === getPass()) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('adminApp').style.display = 'block';
+    initApp();
+  } else {
+    document.getElementById('loginErr').style.display = 'block';
+    document.getElementById('pwInput').value = '';
+    document.getElementById('pwInput').focus();
+  }
+}
+function doLogout() {
+  document.getElementById('adminApp').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('pwInput').value = '';
+  document.getElementById('loginErr').style.display = 'none';
+}
+
+// ── PANELS ──
+function showPanel(id, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
+// ── TOAST ──
+function toast(msg = '✓ Guardado com sucesso!') {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ── INIT ──
+function initApp() {
+  renderAnnouncements();
+  renderGallery();
+  renderPrices();
+  renderSchedule();
+  renderSettings();
+  updateDashboard();
+}
+
+// ── DASHBOARD ──
+function updateDashboard() {
+  document.getElementById('stat-photos').textContent = get('gallery').length;
+  document.getElementById('stat-announcements').textContent = get('announcements').filter(a=>a.active).length;
+  const pw = get('pricesWoman').length + get('pricesMan').length;
+  document.getElementById('stat-prices').textContent = pw;
+}
+
+// ── ANNOUNCEMENTS ──
+function addAnnouncement() {
+  const title = document.getElementById('ann-title').value.trim();
+  const text  = document.getElementById('ann-text').value.trim();
+  if (!title || !text) return toast('⚠️ Preenche o título e o texto!');
+  const list = get('announcements');
+  list.unshift({
+    id: Date.now(),
+    title,
+    text,
+    type:   document.getElementById('ann-type').value,
+    link:   document.getElementById('ann-link').value.trim(),
+    btnTxt: document.getElementById('ann-btn').value.trim(),
+    active: true
+  });
+  save('announcements', list);
+  ['ann-title','ann-text','ann-link','ann-btn'].forEach(id => document.getElementById(id).value = '');
+  renderAnnouncements(); updateDashboard(); toast();
+}
+
+function renderAnnouncements() {
+  const list = get('announcements');
+  const el = document.getElementById('ann-list');
+  document.getElementById('ann-count').textContent = list.filter(a=>a.active).length;
+  if (!list.length) { el.innerHTML = '<p style="color:var(--muted);font-size:13px">Nenhum anúncio criado ainda.</p>'; return }
+  el.innerHTML = list.map((a,i) => `
+    <div class="announcement-item">
+      <div class="ann-body">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+          <span class="ann-title">${a.title}</span>
+          <span class="ann-type type-${a.type}">${a.type}</span>
+          ${!a.active ? '<span style="font-size:11px;color:var(--muted)">(inativo)</span>' : ''}
+        </div>
+        <div class="ann-text">${a.text}</div>
+      </div>
+      <div style="display:flex;gap:6px;flex-shrink:0">
+        <button class="btn btn-ghost btn-sm btn-icon" title="${a.active ? 'Desativar':'Ativar'}" onclick="toggleAnn(${i})">${a.active ? '◉' : '○'}</button>
+        <button class="btn btn-danger btn-sm btn-icon" title="Remover" onclick="removeAnn(${i})">✕</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleAnn(i) { const l=get('announcements'); l[i].active=!l[i].active; save('announcements',l); renderAnnouncements(); updateDashboard(); toast('✓ Anúncio atualizado!') }
+function removeAnn(i)  { const l=get('announcements'); l.splice(i,1); save('announcements',l); renderAnnouncements(); updateDashboard(); toast('✓ Anúncio removido!') }
+
+// ── GALLERY ──
+function addPhoto() {
+  const url = document.getElementById('gallery-url').value.trim();
+  const alt = document.getElementById('gallery-alt').value.trim() || 'Foto do salão';
+  if (!url) return toast('⚠️ Cola o link da foto!');
+  const list = get('gallery');
+  list.push({ url, alt });
+  save('gallery', list);
+  document.getElementById('gallery-url').value = '';
+  document.getElementById('gallery-alt').value = '';
+  renderGallery(); updateDashboard(); toast();
+}
+
+function removePhoto(i) {
+  const list = get('gallery'); list.splice(i,1); save('gallery',list);
+  renderGallery(); updateDashboard(); toast('✓ Foto removida!');
+}
+
+function renderGallery() {
+  const list = get('gallery');
+  document.getElementById('gallery-count').textContent = list.length;
+  const grid = document.getElementById('gallery-grid');
+  grid.innerHTML = list.map((p,i) => `
+    <div class="gallery-thumb">
+      <img src="${p.url}" alt="${p.alt}" onerror="this.style.opacity='.3'" />
+      <button class="remove-btn" onclick="removePhoto(${i})" title="Remover">✕</button>
+    </div>
+  `).join('') + `
+    <button class="gallery-add" onclick="document.getElementById('gallery-url').focus()">
+      <span class="add-icon">+</span><span>Adicionar foto</span>
+    </button>`;
+}
+
+// ── PRICES ──
+function renderPrices() {
+  renderPriceTable('prices-woman', 'woman');
+  renderPriceTable('prices-man', 'man');
+}
+function renderPriceTable(tbodyId, key) {
+  const list = get(key==='woman' ? 'pricesWoman' : 'pricesMan');
+  const tbody = document.getElementById(tbodyId);
+  tbody.innerHTML = list.map((item,i) => `
+    <tr>
+      <td class="name-col"><input type="text" value="${item.name}" oninput="updatePrice('${key}',${i},'name',this.value)" /></td>
+      <td class="price-col"><input type="text" value="${item.price}" oninput="updatePrice('${key}',${i},'price',this.value)" style="text-align:right" /></td>
+      <td class="action-col"><button class="btn btn-danger btn-sm btn-icon" onclick="removePrice('${key}',${i})">✕</button></td>
+    </tr>
+  `).join('');
+}
+
+let priceData = { woman: null, man: null };
+function updatePrice(key, i, field, val) {
+  const storeKey = key==='woman' ? 'pricesWoman' : 'pricesMan';
+  const list = get(storeKey);
+  list[i][field] = val;
+  if (!priceData[key]) priceData[key] = list;
+  priceData[key] = list;
+}
+function addPriceRow(key) {
+  const storeKey = key==='woman' ? 'pricesWoman' : 'pricesMan';
+  const list = get(storeKey);
+  list.push({ name: 'Novo serviço', price: '0€' });
+  save(storeKey, list); renderPrices();
+}
+function removePrice(key, i) {
+  const storeKey = key==='woman' ? 'pricesWoman' : 'pricesMan';
+  const list = get(storeKey); list.splice(i,1); save(storeKey,list); renderPrices();
+}
+function savePrices() {
+  // Read current input values from DOM
+  const saveTable = (tbodyId, storeKey) => {
+    const rows = document.getElementById(tbodyId).querySelectorAll('tr');
+    const list = [];
+    rows.forEach(row => {
+      const inputs = row.querySelectorAll('input');
+      if (inputs.length >= 2) list.push({ name: inputs[0].value, price: inputs[1].value });
+    });
+    save(storeKey, list);
+  };
+  saveTable('prices-woman', 'pricesWoman');
+  saveTable('prices-man', 'pricesMan');
+  updateDashboard(); toast();
+}
+
+// ── SCHEDULE ──
+function renderSchedule() {
+  const days = get('schedule');
+  const el = document.getElementById('schedule-rows');
+  el.innerHTML = days.map((d,i) => `
+    <div class="toggle-row">
+      <div>
+        <div class="toggle-label">${d.day}</div>
+        <div class="toggle-sub" id="sched-sub-${i}">${d.closed ? 'Fechado' : `${d.open} – ${d.close}`}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px">
+        ${!d.closed ? `
+          <input type="time" value="${d.open}"  onchange="updateSched(${i},'open',this.value)"  style="padding:6px 8px;border-radius:8px;border:1px solid var(--line);background:var(--bg-alt);font-family:inherit;font-size:13px;color:var(--text);outline:none" />
+          <span style="color:var(--muted);font-size:12px">até</span>
+          <input type="time" value="${d.close}" onchange="updateSched(${i},'close',this.value)" style="padding:6px 8px;border-radius:8px;border:1px solid var(--line);background:var(--bg-alt);font-family:inherit;font-size:13px;color:var(--text);outline:none" />
+        ` : '<span style="color:var(--muted);font-size:13px">Fechado</span>'}
+        <label class="toggle">
+          <input type="checkbox" ${!d.closed ? 'checked' : ''} onchange="toggleDayClosed(${i},this.checked)" />
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+  `).join('');
+}
+
+function updateSched(i, field, val) {
+  const s = get('schedule'); s[i][field] = val; save('schedule', s);
+}
+function toggleDayClosed(i, isOpen) {
+  const s = get('schedule'); s[i].closed = !isOpen; save('schedule', s); renderSchedule();
+}
+function saveSchedule() { toast() }
+
+// ── SETTINGS ──
+function renderSettings() {
+  const s = get('settings');
+  document.getElementById('cfg-name').value      = s.name;
+  document.getElementById('cfg-address').value   = s.address;
+  document.getElementById('cfg-email').value     = s.email;
+  document.getElementById('cfg-zappy').value     = s.zappy;
+  document.getElementById('cfg-instagram').value = s.instagram;
+  document.getElementById('cfg-facebook').value  = s.facebook;
+}
+function saveSettings() {
+  save('settings', {
+    name:      document.getElementById('cfg-name').value,
+    address:   document.getElementById('cfg-address').value,
+    email:     document.getElementById('cfg-email').value,
+    zappy:     document.getElementById('cfg-zappy').value,
+    instagram: document.getElementById('cfg-instagram').value,
+    facebook:  document.getElementById('cfg-facebook').value,
+  });
+  toast();
+}
+function changePassword() {
+  const p1 = document.getElementById('new-pw').value;
+  const p2 = document.getElementById('new-pw2').value;
+  if (!p1) return toast('⚠️ Escreve a nova password!');
+  if (p1 !== p2) return toast('⚠️ As passwords não coincidem!');
+  localStorage.setItem(PASS_KEY, p1);
+  document.getElementById('new-pw').value = '';
+  document.getElementById('new-pw2').value = '';
+  toast('✓ Password alterada!');
+}
+</script>
+</body>
+</html>
