@@ -1,13 +1,7 @@
 // ── STORAGE HELPER ──
 const DEFAULTS = {
   announcements: [],
-  gallery: [
-    { url: 'https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?auto=format&fit=crop&w=1200&q=80', alt: 'Trabalho 1' },
-    { url: 'https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?auto=format&fit=crop&w=1200&q=80', alt: 'Trabalho 2' },
-    { url: 'https://images.unsplash.com/photo-1522337660859-02fbefca4702?auto=format&fit=crop&w=1200&q=80', alt: 'Trabalho 3' },
-    { url: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=1200&q=80', alt: 'Trabalho 4' },
-    { url: 'https://images.unsplash.com/photo-1519419166318-4f5c601b7f9d?auto=format&fit=crop&w=1200&q=80', alt: 'Trabalho 5' },
-  ],
+  gallery: [],
   pricesWoman: [
     { name: 'Corte + Brushing', price: '35€' },
     { name: 'Brushing', price: '18€' },
@@ -82,9 +76,20 @@ function renderAnnouncements() {
 
 // ── GALLERY ──
 function renderGallery() {
-  const photos = getData('gallery');
   const galleryEl = document.querySelector('.gallery');
-  if (!galleryEl || !photos.length) return;
+  if (!galleryEl) return;
+
+  // Read directly from localStorage — never fall back to hardcoded examples
+  let photos = [];
+  try {
+    const stored = localStorage.getItem('zen_gallery');
+    if (stored) photos = JSON.parse(stored);
+  } catch(e) { photos = [] }
+
+  if (!photos.length) {
+    galleryEl.innerHTML = '<p style="color:var(--color-muted, #837468); text-align:center; padding:40px 0; grid-column:1/-1">Fotos em breve — volta a visitar-nos! 🌿</p>';
+    return;
+  }
 
   const items = photos.map((p, i) => {
     const isTall = i === 0;
@@ -95,8 +100,6 @@ function renderGallery() {
   });
 
   galleryEl.innerHTML = items.join('');
-
-  // Re-observe new elements
   galleryEl.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 }
 
