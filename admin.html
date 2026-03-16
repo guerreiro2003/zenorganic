@@ -730,7 +730,7 @@ function toggleAnn(i) { const l=get('announcements'); l[i].active=!l[i].active; 
 function removeAnn(i)  { const l=get('announcements'); l.splice(i,1); save('announcements',l); renderAnnouncements(); updateDashboard(); toast('✓ Anúncio removido!') }
 
 // ── CLOUDINARY CONFIG ──
-const CLOUDINARY_CLOUD = 'pedroguerreiro2003';
+const CLOUDINARY_CLOUD = 'dmjoply5o';
 const CLOUDINARY_PRESET = 'zen-organic';
 const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`;
 
