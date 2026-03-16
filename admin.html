@@ -270,6 +270,20 @@
     .stat-value { font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 300; line-height: 1 }
     .stat-sub { font-size: 11.5px; color: var(--muted); margin-top: 3px }
 
+    /* ── UPLOAD ZONE ── */
+    .upload-zone {
+      border: 2px dashed var(--line); border-radius: var(--r);
+      padding: 36px 20px; text-align: center;
+      cursor: pointer; transition: border-color .2s, background .2s;
+      background: rgba(40,34,26,.02);
+    }
+    .upload-zone:hover, .upload-zone.drag-over {
+      border-color: var(--accent); background: rgba(107,124,90,.05);
+    }
+    .upload-zone__icon { font-size: 36px; margin-bottom: 10px }
+    .upload-zone__title { font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 4px }
+    .upload-zone__sub { font-size: 12.5px; color: var(--muted) }
+
     @media (max-width: 700px) {
       .sidebar { display: none }
       .admin-main { padding: 18px 16px }
@@ -426,34 +440,45 @@
       <!-- GALERIA -->
       <div class="panel" id="panel-gallery">
         <div class="panel-title">Galeria de Fotos</div>
-        <p class="panel-sub">Adiciona, remove e organiza as fotos que aparecem na galeria do site.</p>
+        <p class="panel-sub">Faz upload direto de fotos do telemóvel ou computador — aparecem no site imediatamente.</p>
 
         <div class="admin-card">
-          <h3>Adicionar foto</h3>
-          <div class="form-cols">
-            <div class="form-row">
-              <label>Link da foto (URL)</label>
-              <input id="gallery-url" type="url" placeholder="https://..." />
-            </div>
-            <div class="form-row">
-              <label>Descrição (para acessibilidade)</label>
-              <input id="gallery-alt" type="text" placeholder="ex: Corte bob com franja" />
+          <h3>Fazer upload de foto</h3>
+          <div class="upload-zone" id="uploadZone">
+            <input type="file" id="fileInput" accept="image/*" multiple hidden />
+            <div class="upload-zone__icon">📷</div>
+            <div class="upload-zone__title">Arrasta fotos para aqui</div>
+            <div class="upload-zone__sub">ou clica para escolher do telemóvel / computador</div>
+            <button class="btn btn-primary" style="margin-top:14px" onclick="document.getElementById('fileInput').click()">
+              Escolher fotos
+            </button>
+          </div>
+          <div id="upload-progress" style="display:none; margin-top:14px">
+            <div style="font-size:13px; color:var(--muted); margin-bottom:8px" id="upload-status">A carregar...</div>
+            <div style="background:rgba(40,34,26,.1); border-radius:999px; height:6px; overflow:hidden">
+              <div id="upload-bar" style="height:100%; background:var(--accent); border-radius:999px; width:0%; transition:width .3s ease"></div>
             </div>
           </div>
-          <p style="color:var(--muted);font-size:12px;margin-bottom:12px">
-            💡 Dica: tira as fotos, envia para o Google Drive ou Instagram e copia o link direto.
-          </p>
-          <button class="btn btn-primary" onclick="addPhoto()">Adicionar à galeria</button>
+          <details style="margin-top:16px">
+            <summary style="font-size:12px; color:var(--muted); cursor:pointer; user-select:none">Preferes adicionar por link? (avançado)</summary>
+            <div style="margin-top:10px; display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap">
+              <div class="form-row" style="flex:1; margin:0; min-width:160px">
+                <label>URL da foto</label>
+                <input id="gallery-url" type="url" placeholder="https://..." />
+              </div>
+              <div class="form-row" style="flex:1; margin:0; min-width:160px">
+                <label>Descrição</label>
+                <input id="gallery-alt" type="text" placeholder="ex: Corte bob" />
+              </div>
+              <button class="btn btn-ghost" onclick="addPhotoByUrl()" style="flex-shrink:0; margin-bottom:0">Adicionar</button>
+            </div>
+          </details>
         </div>
 
         <div class="admin-card">
           <h3>Fotos na galeria <span class="badge-count" id="gallery-count">0</span></h3>
-          <div class="gallery-grid" id="gallery-grid">
-            <button class="gallery-add" onclick="document.getElementById('gallery-url').focus(); showPanel('gallery', document.querySelector('[onclick*=gallery]'))">
-              <span class="add-icon">+</span>
-              <span>Adicionar foto</span>
-            </button>
-          </div>
+          <p style="font-size:12px; color:var(--muted); margin-bottom:14px">Passa o rato por cima de uma foto para a remover.</p>
+          <div class="gallery-grid" id="gallery-grid"></div>
         </div>
       </div>
 
@@ -653,6 +678,7 @@ function initApp() {
   renderSchedule();
   renderSettings();
   updateDashboard();
+  initUploadZone();
 }
 
 // ── DASHBOARD ──
@@ -709,8 +735,60 @@ function renderAnnouncements() {
 function toggleAnn(i) { const l=get('announcements'); l[i].active=!l[i].active; save('announcements',l); renderAnnouncements(); updateDashboard(); toast('✓ Anúncio atualizado!') }
 function removeAnn(i)  { const l=get('announcements'); l.splice(i,1); save('announcements',l); renderAnnouncements(); updateDashboard(); toast('✓ Anúncio removido!') }
 
+// ── CLOUDINARY CONFIG ──
+const CLOUDINARY_CLOUD = 'pedroguerreiro2003';
+const CLOUDINARY_PRESET = 'zen-organic';
+const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`;
+
 // ── GALLERY ──
-function addPhoto() {
+async function uploadToCloudinary(file, index, total) {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('upload_preset', CLOUDINARY_PRESET);
+  formData.append('folder', 'zen-organic');
+
+  const res = await fetch(CLOUDINARY_URL, { method: 'POST', body: formData });
+  if (!res.ok) throw new Error('Upload falhou');
+  const data = await res.json();
+  return data.secure_url;
+}
+
+async function handleFiles(files) {
+  if (!files.length) return;
+  const progressEl = document.getElementById('upload-progress');
+  const statusEl   = document.getElementById('upload-status');
+  const barEl      = document.getElementById('upload-bar');
+  progressEl.style.display = 'block';
+
+  const list = get('gallery');
+  let done = 0;
+
+  for (const file of files) {
+    statusEl.textContent = `A carregar ${done + 1} de ${files.length}... (${file.name})`;
+    barEl.style.width = `${Math.round((done / files.length) * 100)}%`;
+    try {
+      const url = await uploadToCloudinary(file, done, files.length);
+      list.push({ url, alt: file.name.replace(/\.[^.]+$/, '') });
+    } catch (e) {
+      toast(`⚠️ Erro ao carregar ${file.name}`);
+    }
+    done++;
+  }
+
+  barEl.style.width = '100%';
+  statusEl.textContent = `✓ ${done} foto(s) carregada(s) com sucesso!`;
+  save('gallery', list);
+  renderGallery();
+  updateDashboard();
+  toast(`✓ ${done} foto(s) adicionada(s) à galeria!`);
+
+  setTimeout(() => {
+    progressEl.style.display = 'none';
+    barEl.style.width = '0%';
+  }, 3000);
+}
+
+function addPhotoByUrl() {
   const url = document.getElementById('gallery-url').value.trim();
   const alt = document.getElementById('gallery-alt').value.trim() || 'Foto do salão';
   if (!url) return toast('⚠️ Cola o link da foto!');
@@ -731,15 +809,36 @@ function renderGallery() {
   const list = get('gallery');
   document.getElementById('gallery-count').textContent = list.length;
   const grid = document.getElementById('gallery-grid');
+  if (!list.length) {
+    grid.innerHTML = '<p style="color:var(--muted);font-size:13px">Nenhuma foto ainda. Faz upload acima!</p>';
+    return;
+  }
   grid.innerHTML = list.map((p,i) => `
     <div class="gallery-thumb">
       <img src="${p.url}" alt="${p.alt}" onerror="this.style.opacity='.3'" />
       <button class="remove-btn" onclick="removePhoto(${i})" title="Remover">✕</button>
     </div>
-  `).join('') + `
-    <button class="gallery-add" onclick="document.getElementById('gallery-url').focus()">
-      <span class="add-icon">+</span><span>Adicionar foto</span>
-    </button>`;
+  `).join('');
+}
+
+// Drag & drop + file input
+function initUploadZone() {
+  const zone  = document.getElementById('uploadZone');
+  const input = document.getElementById('fileInput');
+  if (!zone || !input) return;
+
+  zone.addEventListener('click', (e) => {
+    if (e.target.tagName !== 'BUTTON') input.click();
+  });
+  input.addEventListener('change', () => handleFiles(Array.from(input.files)));
+
+  zone.addEventListener('dragover',  (e) => { e.preventDefault(); zone.classList.add('drag-over') });
+  zone.addEventListener('dragleave', ()  => zone.classList.remove('drag-over'));
+  zone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    zone.classList.remove('drag-over');
+    handleFiles(Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/')));
+  });
 }
 
 // ── PRICES ──
