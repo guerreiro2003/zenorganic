@@ -741,9 +741,18 @@ async function uploadToCloudinary(file) {
   formData.append('upload_preset', CLOUDINARY_PRESET);
   formData.append('folder', 'zen-organic');
 
+  console.log('A fazer upload para:', CLOUDINARY_URL);
+  console.log('Preset:', CLOUDINARY_PRESET);
+  console.log('Ficheiro:', file.name, file.type, file.size);
+
   const res = await fetch(CLOUDINARY_URL, { method: 'POST', body: formData });
-  if (!res.ok) throw new Error('Upload falhou');
   const data = await res.json();
+
+  console.log('Resposta Cloudinary:', data);
+
+  if (!res.ok || data.error) {
+    throw new Error(data.error?.message || `HTTP ${res.status}`);
+  }
   return data.secure_url;
 }
 
