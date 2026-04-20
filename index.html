@@ -1,0 +1,700 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Book It — Marcações</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <header class="header">
+    <div class="header__inner">
+      <div class="header__brand">
+        <div class="header__mark" id="headerMark">B</div>
+        <div>
+          <div class="header__name" id="headerName">Book It</div>
+          <div class="header__sub" id="headerSub">Marcações online</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main style="padding: 32px 0 64px">
+    <div class="container">
+
+      <!-- STEPS INDICATOR -->
+      <div class="steps" id="stepsBar">
+        <div class="step active" id="step1">
+          <div class="step__circle">1</div>
+          <div class="step__label">Serviço</div>
+        </div>
+        <div class="step-line" id="line1"></div>
+        <div class="step" id="step2">
+          <div class="step__circle">2</div>
+          <div class="step__label">Colaborador</div>
+        </div>
+        <div class="step-line" id="line2"></div>
+        <div class="step" id="step3">
+          <div class="step__circle">3</div>
+          <div class="step__label">Data & hora</div>
+        </div>
+        <div class="step-line" id="line3"></div>
+        <div class="step" id="step4">
+          <div class="step__circle">4</div>
+          <div class="step__label">Dados</div>
+        </div>
+        <div class="step-line" id="line4"></div>
+        <div class="step" id="step5">
+          <div class="step__circle">5</div>
+          <div class="step__label">Confirmar</div>
+        </div>
+      </div>
+
+      <!-- PROMOÇÕES ATIVAS -->
+      <div id="promoBanners"></div>
+
+      <!-- PASSO 1: SERVIÇOS -->
+      <div id="screenServices">
+        <div class="section-title">Escolhe um serviço</div>
+        <div class="section-sub" id="salonTagline">Seleciona o que pretendes</div>
+        <div class="services-grid" id="servicesList">
+          <div style="text-align:center;padding:40px;color:var(--muted)">A carregar serviços...</div>
+        </div>
+      </div>
+
+      <!-- PASSO 2: COLABORADOR -->
+      <div id="screenStaff" style="display:none">
+        <div class="section-title">Escolhe um colaborador</div>
+        <div class="section-sub">Ou escolhe "Sem preferência" para o primeiro disponível</div>
+        <div class="services-grid" id="staffList">
+          <div style="text-align:center;padding:40px;color:var(--muted)">A carregar equipa...</div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:16px">
+          <button class="btn btn--ghost btn--full" onclick="goTo(1)">← Voltar</button>
+        </div>
+      </div>
+
+      <!-- PASSO 3: DATA & HORA -->
+      <div id="screenDateTime" style="display:none">
+        <div class="section-title">Quando preferes?</div>
+        <div class="section-sub">Escolhe o dia e a hora disponível</div>
+
+        <div class="card" style="margin-bottom:16px">
+          <div class="calendar" id="calendar">
+            <div class="calendar__header">
+              <button class="calendar__nav" id="calPrev">‹</button>
+              <div class="calendar__title" id="calTitle"></div>
+              <button class="calendar__nav" id="calNext">›</button>
+            </div>
+            <div class="calendar__grid" id="calGrid"></div>
+          </div>
+        </div>
+
+        <div id="timeslotsWrap" style="display:none">
+          <div class="section-sub" id="selectedDateLabel"></div>
+          <div class="timeslots" id="timeslotsList"></div>
+        </div>
+
+        <div style="display:flex;gap:10px;margin-top:8px">
+          <button class="btn btn--ghost btn--full" onclick="goTo(2)">← Voltar</button>
+          <button class="btn btn--primary btn--full" id="btnDateNext" onclick="goTo(4)" disabled>Continuar →</button>
+        </div>
+      </div>
+
+      <!-- PASSO 3: DADOS DO CLIENTE -->
+      <div id="screenData" style="display:none">
+        <div class="section-title">Os teus dados</div>
+        <div class="section-sub">Para confirmarmos a marcação</div>
+
+        <div class="card">
+          <div class="field">
+            <label>Nome completo *</label>
+            <input type="text" id="clientName" placeholder="O teu nome" />
+          </div>
+          <div class="field">
+            <label>Email *</label>
+            <input type="email" id="clientEmail" placeholder="email@exemplo.com" />
+          </div>
+          <div class="field">
+            <label>Telemóvel *</label>
+            <input type="tel" id="clientPhone" placeholder="9XX XXX XXX" />
+          </div>
+          <div class="field">
+            <label>Código de referido (opcional)</label>
+            <input type="text" id="referralCode" placeholder="ex: ZEN-ANA42" style="text-transform:uppercase" />
+            <div style="font-size:11.5px;color:var(--muted);margin-top:4px">Tens um código de amigo? Ambos ganham desconto!</div>
+          </div>
+          <div class="field">
+            <label>Notas (opcional)</label>
+            <textarea id="clientNotes" placeholder="Alguma preferência ou informação extra..."></textarea>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:10px;margin-top:16px">
+          <button class="btn btn--ghost btn--full" onclick="goTo(4)">← Voltar</button>
+          <button class="btn btn--primary btn--full" onclick="goTo(5)">Continuar →</button>
+        </div>
+      </div>
+
+      <!-- PASSO 4: CONFIRMAÇÃO -->
+      <div id="screenConfirm" style="display:none">
+        <div class="section-title">Confirmar marcação</div>
+        <div class="section-sub">Verifica os dados antes de confirmar</div>
+
+        <div class="card" style="margin-bottom:16px">
+          <table class="confirm-table">
+            <tr><td class="label">Serviço</td><td class="value" id="confirmService">—</td></tr>
+            <tr id="confirmStaffRow"><td class="label">Colaborador</td><td class="value" id="confirmStaff">—</td></tr>
+            <tr><td class="label">Data</td><td class="value" id="confirmDate">—</td></tr>
+            <tr><td class="label">Hora</td><td class="value" id="confirmTime">—</td></tr>
+            <tr><td class="label">Duração</td><td class="value" id="confirmDuration">—</td></tr>
+            <tr><td class="label">Preço</td><td class="value" id="confirmPrice">—</td></tr>
+            <tr><td class="label">Nome</td><td class="value" id="confirmName">—</td></tr>
+            <tr><td class="label">Email</td><td class="value" id="confirmEmail">—</td></tr>
+            <tr><td class="label">Telemóvel</td><td class="value" id="confirmPhone">—</td></tr>
+          </table>
+        </div>
+
+        <div id="discountInfo" style="display:none;margin-bottom:16px">
+          <div class="promo-banner">
+            <div>
+              <div class="promo-banner__text">🎉 Desconto aplicado!</div>
+              <div class="promo-banner__desc" id="discountDesc"></div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:10px">
+          <button class="btn btn--ghost btn--full" onclick="goTo(4)">← Voltar</button>
+          <button class="btn btn--primary btn--full btn--lg" id="btnConfirm" onclick="submitBooking()">
+            Confirmar marcação
+          </button>
+        </div>
+      </div>
+
+      <!-- LOADING -->
+      <div id="screenLoading" style="display:none;text-align:center;padding:60px 0">
+        <div style="font-size:32px;margin-bottom:16px">⏳</div>
+        <div style="font-size:15px;color:var(--muted)">A confirmar a tua marcação...</div>
+      </div>
+
+    </div>
+  </main>
+
+  <div id="toast"></div>
+
+<script type="module">
+import {
+  db, collection, doc, getDoc, getDocs, addDoc,
+  query, where, orderBy, serverTimestamp
+} from './firebase.js';
+
+// ── ESTADO GLOBAL ──
+const state = {
+  salon: null,
+  salonId: null,
+  services: [],
+  staff: [],
+  selectedService: null,
+  selectedStaff: null,   // null = sem preferência
+  selectedDate: null,
+  selectedTime: null,
+  bookedSlots: [],
+  currentMonth: new Date(),
+  schedule: null,
+  promotions: [],
+  referralValid: false,
+  referralDiscount: 0,
+};
+
+// ── LER SALONID DA URL ──
+// Ex: bookit.netlify.app/?salon=zen-organic
+// Se não houver, usa default
+function getSalonId() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get('salon') || 'zen-organic';
+}
+
+// ── INICIALIZAR ──
+async function init() {
+  state.salonId = getSalonId();
+
+  try {
+    // Carregar dados do salão
+    const salonDoc = await getDoc(doc(db, 'salons', state.salonId));
+    if (!salonDoc.exists()) {
+      showError('Salão não encontrado.');
+      return;
+    }
+    state.salon = salonDoc.data();
+    applySalonBranding();
+
+    // Carregar horário
+    const schedDoc = await getDoc(doc(db, 'salons', state.salonId, 'config', 'schedule'));
+    if (schedDoc.exists()) state.schedule = schedDoc.data();
+
+    // Carregar equipa ativa
+    const staffSnap = await getDocs(
+      query(collection(db, 'salons', state.salonId, 'staff'), where('active', '==', true), orderBy('order','asc'))
+    );
+    state.staff = staffSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+    // Carregar promoções ativas
+    const promoSnap = await getDocs(
+      query(collection(db, 'salons', state.salonId, 'promotions'), where('active', '==', true))
+    );
+    state.promotions = promoSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderPromoBanners();
+
+    // Carregar serviços ativos
+    const servicesSnap = await getDocs(
+      query(
+        collection(db, 'salons', state.salonId, 'services'),
+        where('active', '==', true),
+        orderBy('order', 'asc')
+      )
+    );
+    state.services = servicesSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderServices();
+
+  } catch (e) {
+    console.error(e);
+    showError('Erro ao carregar. Tenta novamente.');
+  }
+}
+
+// ── BRANDING DO SALÃO ──
+function applySalonBranding() {
+  const s = state.salon;
+  document.title = `Marcar — ${s.name}`;
+  document.getElementById('headerName').textContent = s.name;
+  document.getElementById('headerSub').textContent  = s.tagline || 'Marcações online';
+  document.getElementById('headerMark').textContent = s.name.charAt(0).toUpperCase();
+  document.getElementById('salonTagline').textContent = s.address || 'Seleciona o que pretendes';
+  if (s.primaryColor) {
+    document.documentElement.style.setProperty('--brand', s.primaryColor);
+    document.documentElement.style.setProperty('--brand-dark', s.primaryColorDark || s.primaryColor);
+    document.documentElement.style.setProperty('--brand-light', s.primaryColorLight || '#eef3e8');
+  }
+}
+
+// ── PROMOÇÕES ──
+function renderPromoBanners() {
+  const wrap = document.getElementById('promoBanners');
+  wrap.innerHTML = state.promotions.map(p => `
+    <div class="promo-banner">
+      <div>
+        <div class="promo-banner__text">🌿 ${p.title}</div>
+        <div class="promo-banner__desc">${p.description}</div>
+      </div>
+      ${p.badgeText ? `<div class="badge badge--green">${p.badgeText}</div>` : ''}
+    </div>
+  `).join('');
+}
+
+// ── SERVIÇOS ──
+function renderServices() {
+  const list = document.getElementById('servicesList');
+  if (!state.services.length) {
+    list.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted)">Nenhum serviço disponível de momento.</div>';
+    return;
+  }
+  list.innerHTML = state.services.map(s => `
+    <div class="service-item" onclick="selectService('${s.id}')">
+      <div>
+        <div class="service-item__name">${s.name}</div>
+        <div class="service-item__detail">${s.duration} min${s.description ? ' · ' + s.description : ''}</div>
+      </div>
+      <div class="service-item__price">${s.price}€</div>
+    </div>
+  `).join('');
+}
+
+// ── EQUIPA ──
+function renderStaff() {
+  const list = document.getElementById('staffList');
+  const items = [];
+
+  // Opção "Sem preferência" sempre primeiro
+  items.push(`
+    <div class="service-item ${!state.selectedStaff ? 'selected' : ''}" onclick="selectStaff(null)">
+      <div>
+        <div class="service-item__name">Sem preferência</div>
+        <div class="service-item__detail">Primeiro colaborador disponível</div>
+      </div>
+      <div style="font-size:20px">✦</div>
+    </div>`);
+
+  state.staff.forEach(s => {
+    items.push(`
+      <div class="service-item ${state.selectedStaff?.id === s.id ? 'selected' : ''}" onclick="selectStaff('${s.id}')">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:40px;height:40px;border-radius:50%;background:var(--brand-light);display:grid;place-items:center;font-size:16px;font-weight:500;color:var(--brand);flex-shrink:0">${s.name.charAt(0)}</div>
+          <div>
+            <div class="service-item__name">${s.name}</div>
+            <div class="service-item__detail">${s.role || 'Cabeleireiro/a'}${s.specialties ? ' · ' + s.specialties : ''}</div>
+          </div>
+        </div>
+      </div>`);
+  });
+
+  list.innerHTML = items.join('');
+}
+
+window.selectStaff = function(id) {
+  state.selectedStaff = id ? state.staff.find(s => s.id === id) : null;
+  renderStaff();
+  setTimeout(() => goTo(3), 280);
+};
+
+window.selectService = function(id) {
+  state.selectedService = state.services.find(s => s.id === id);
+  document.querySelectorAll('.service-item').forEach(el => el.classList.remove('selected'));
+  event.currentTarget.classList.add('selected');
+  setTimeout(() => goTo(2), 300);
+};
+
+// ── CALENDÁRIO ──
+const DAYS = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+const MONTHS = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+
+function renderCalendar() {
+  const d    = state.currentMonth;
+  const year = d.getFullYear();
+  const month= d.getMonth();
+  const today= new Date(); today.setHours(0,0,0,0);
+
+  document.getElementById('calTitle').textContent = `${MONTHS[month]} ${year}`;
+
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+  let html = DAYS.map(day => `<div class="calendar__day-name">${day}</div>`).join('');
+
+  for (let i = 0; i < firstDay; i++) html += `<div class="calendar__day empty"></div>`;
+
+  for (let day = 1; day <= daysInMonth; day++) {
+    const date = new Date(year, month, day);
+    date.setHours(0,0,0,0);
+    const isPast     = date < today;
+    const isClosed   = isClosedDay(date);
+    const isDisabled = isPast || isClosed;
+    const isSelected = state.selectedDate && date.toDateString() === state.selectedDate.toDateString();
+    const isToday    = date.toDateString() === today.toDateString();
+
+    let cls = 'calendar__day';
+    if (isDisabled) cls += ' disabled';
+    if (isSelected) cls += ' selected';
+    if (isToday && !isSelected) cls += ' today';
+
+    const clickable = isDisabled ? '' : `onclick="selectDate(${year},${month},${day})"`;
+    html += `<div class="${cls}" ${clickable}>${day}</div>`;
+  }
+
+  document.getElementById('calGrid').innerHTML = html;
+}
+
+function isClosedDay(date) {
+  if (!state.schedule) return false;
+  const dayName = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'][date.getDay()];
+  const dayConfig = state.schedule[dayName];
+  return dayConfig && dayConfig.closed;
+}
+
+window.selectDate = function(year, month, day) {
+  state.selectedDate = new Date(year, month, day);
+  state.selectedTime = null;
+  document.getElementById('btnDateNext').disabled = true;
+  renderCalendar();
+  loadTimeslots();
+};
+
+async function loadTimeslots() {
+  const wrap = document.getElementById('timeslotsWrap');
+  const list = document.getElementById('timeslotsList');
+  const label= document.getElementById('selectedDateLabel');
+
+  const date = state.selectedDate;
+  label.textContent = `Horários disponíveis — ${date.getDate()} de ${MONTHS[date.getMonth()]}`;
+  wrap.style.display = 'block';
+  list.innerHTML = '<div style="color:var(--muted);font-size:13px">A verificar disponibilidade...</div>';
+
+  // Gerar slots com base no horário do colaborador ou do salão
+  const dayName = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'][date.getDay()];
+  let dayConfig = null;
+  if (state.selectedStaff?.schedule) {
+    dayConfig = state.selectedStaff.schedule[dayName];
+  } else {
+    dayConfig = state.schedule && state.schedule[dayName];
+  }
+  const open  = dayConfig?.open  || '10:00';
+  const close = dayConfig?.close || '19:00';
+  const duration = state.selectedService?.duration || 60;
+
+  const slots = generateSlots(open, close, duration);
+
+  // Verificar slots já ocupados
+  const dateStr = formatDate(date);
+  let bookingsQuery;
+  if (state.selectedStaff) {
+    // Filtrar por colaborador específico
+    bookingsQuery = query(
+      collection(db, 'salons', state.salonId, 'bookings'),
+      where('date', '==', dateStr),
+      where('staffId', '==', state.selectedStaff.id),
+      where('status', 'in', ['pending', 'confirmed'])
+    );
+  } else {
+    bookingsQuery = query(
+      collection(db, 'salons', state.salonId, 'bookings'),
+      where('date', '==', dateStr),
+      where('status', 'in', ['pending', 'confirmed'])
+    );
+  }
+  const bookingsSnap = await getDocs(bookingsQuery);
+  const booked = bookingsSnap.docs.map(d => d.data().time);
+
+  list.innerHTML = slots.map(slot => {
+    const isBooked = booked.includes(slot);
+    return `
+      <div class="timeslot ${isBooked ? 'booked' : ''}"
+           ${isBooked ? '' : `onclick="selectTime('${slot}')"`}>
+        ${slot}
+      </div>`;
+  }).join('');
+}
+
+function generateSlots(open, close, duration) {
+  const slots = [];
+  let [h, m] = open.split(':').map(Number);
+  const [endH, endM] = close.split(':').map(Number);
+  const endTotal = endH * 60 + endM;
+
+  while (h * 60 + m + duration <= endTotal) {
+    slots.push(`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`);
+    m += duration;
+    if (m >= 60) { h += Math.floor(m/60); m = m % 60; }
+  }
+  return slots;
+}
+
+window.selectTime = function(time) {
+  state.selectedTime = time;
+  document.querySelectorAll('.timeslot').forEach(el => el.classList.remove('selected'));
+  event.currentTarget.classList.add('selected');
+  document.getElementById('btnDateNext').disabled = false;
+};
+
+// ── NAVEGAÇÃO ENTRE PASSOS ──
+window.goTo = function(step) {
+  // Validações
+  if (step === 2 && !state.selectedService) return toast('⚠️ Escolhe um serviço!');
+  if (step === 3) { /* staff chosen or skipped - always ok */ }
+  if (step === 4 && (!state.selectedDate || !state.selectedTime)) return toast('⚠️ Escolhe data e hora!');
+  if (step === 5) {
+    const name  = document.getElementById('clientName').value.trim();
+    const email = document.getElementById('clientEmail').value.trim();
+    const phone = document.getElementById('clientPhone').value.trim();
+    if (!name || !email || !phone) return toast('⚠️ Preenche todos os campos obrigatórios!');
+    if (!email.includes('@')) return toast('⚠️ Email inválido!');
+    fillConfirmation();
+  }
+
+  ['Services','Staff','DateTime','Data','Confirm','Loading'].forEach(s => {
+    const el = document.getElementById('screen'+s);
+    if (el) el.style.display = 'none';
+  });
+
+  const screens = { 1:'Services', 2:'Staff', 3:'DateTime', 4:'Data', 5:'Confirm' };
+  const screenEl = document.getElementById('screen'+screens[step]);
+  if (screenEl) screenEl.style.display = 'block';
+
+  updateSteps(step);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  if (step === 2) renderStaff();
+  if (step === 3) { renderCalendar(); setupCalNav(); }
+};
+
+function setupCalNav() {
+  document.getElementById('calPrev').onclick = () => {
+    state.currentMonth = new Date(state.currentMonth.getFullYear(), state.currentMonth.getMonth() - 1, 1);
+    renderCalendar();
+  };
+  document.getElementById('calNext').onclick = () => {
+    state.currentMonth = new Date(state.currentMonth.getFullYear(), state.currentMonth.getMonth() + 1, 1);
+    renderCalendar();
+  };
+}
+
+function updateSteps(current) {
+  for (let i = 1; i <= 5; i++) {
+    const el = document.getElementById('step'+i);
+    if (!el) continue;
+    el.classList.remove('active','done');
+    if (i < current) el.classList.add('done');
+    if (i === current) el.classList.add('active');
+    if (i < 5) {
+      const line = document.getElementById('line'+i);
+      if (line) line.classList.toggle('done', i < current);
+    }
+  }
+}
+
+// ── PREENCHER CONFIRMAÇÃO ──
+function fillConfirmation() {
+  const s = state.selectedService;
+  const d = state.selectedDate;
+  document.getElementById('confirmService').textContent  = s.name;
+  document.getElementById('confirmDate').textContent     = `${d.getDate()} de ${MONTHS[d.getMonth()]} de ${d.getFullYear()}`;
+  document.getElementById('confirmTime').textContent     = state.selectedTime;
+  document.getElementById('confirmDuration').textContent = `${s.duration} min`;
+  document.getElementById('confirmPrice').textContent    = `${s.price}€`;
+  document.getElementById('confirmName').textContent     = document.getElementById('clientName').value.trim();
+  document.getElementById('confirmEmail').textContent    = document.getElementById('clientEmail').value.trim();
+  document.getElementById('confirmPhone').textContent    = document.getElementById('clientPhone').value.trim();
+
+  // Staff
+  const staffRow = document.getElementById('confirmStaffRow');
+  const staffVal = document.getElementById('confirmStaff');
+  if (staffRow && staffVal) {
+    staffVal.textContent = state.selectedStaff ? state.selectedStaff.name : 'Sem preferência';
+  }
+  checkReferral();
+}
+
+// ── VERIFICAR CÓDIGO REFERIDO ──
+async function checkReferral() {
+  const code = document.getElementById('referralCode').value.trim().toUpperCase();
+  const discountEl = document.getElementById('discountInfo');
+  const descEl = document.getElementById('discountDesc');
+  if (!code) { discountEl.style.display = 'none'; return; }
+
+  try {
+    const snap = await getDocs(
+      query(collection(db, 'salons', state.salonId, 'clients'), where('referralCode', '==', code))
+    );
+    if (!snap.empty) {
+      const config = state.salon.referralDiscount || 10;
+      state.referralValid = true;
+      state.referralDiscount = config;
+      descEl.textContent = `Código "${code}" válido — ambos ganham ${config}% de desconto!`;
+      discountEl.style.display = 'block';
+    } else {
+      state.referralValid = false;
+      descEl.textContent = `Código "${code}" não encontrado.`;
+      discountEl.style.display = 'block';
+    }
+  } catch(e) { console.error(e) }
+}
+
+// ── SUBMETER MARCAÇÃO ──
+window.submitBooking = async function() {
+  document.getElementById('screenConfirm').style.display   = 'none';
+  document.getElementById('screenLoading').style.display   = 'block';
+  document.getElementById('btnConfirm').disabled = true;
+
+  try {
+    const name  = document.getElementById('clientName').value.trim();
+    const email = document.getElementById('clientEmail').value.trim();
+    const phone = document.getElementById('clientPhone').value.trim();
+    const notes = document.getElementById('clientNotes').value.trim();
+    const referralCode = document.getElementById('referralCode').value.trim().toUpperCase();
+    const s     = state.selectedService;
+
+    // Gerar código de referido único para o novo cliente
+    const newReferralCode = generateReferralCode(name, state.salonId);
+
+    // Criar ou atualizar cliente
+    const clientsRef = collection(db, 'salons', state.salonId, 'clients');
+    const existing = await getDocs(query(clientsRef, where('email', '==', email)));
+
+    let clientId;
+    if (existing.empty) {
+      const clientDoc = await addDoc(clientsRef, {
+        name, email, phone,
+        referralCode: newReferralCode,
+        visits: 0,
+        totalSpent: 0,
+        referredBy: state.referralValid ? referralCode : null,
+        createdAt: serverTimestamp()
+      });
+      clientId = clientDoc.id;
+    } else {
+      clientId = existing.docs[0].id;
+    }
+
+    // Calcular preço final com desconto
+    let finalPrice = s.price;
+    if (state.referralValid) finalPrice = Math.round(s.price * (1 - state.referralDiscount / 100));
+
+    // Criar marcação
+    await addDoc(collection(db, 'salons', state.salonId, 'bookings'), {
+      clientId, clientName: name, clientEmail: email, clientPhone: phone,
+      serviceId: s.id, serviceName: s.name,
+      serviceDuration: s.duration, servicePrice: s.price,
+      finalPrice,
+      staffId:   state.selectedStaff?.id || null,
+      staffName: state.selectedStaff?.name || 'Sem preferência',
+      date: formatDate(state.selectedDate),
+      time: state.selectedTime,
+      notes,
+      referralCode: state.referralValid ? referralCode : null,
+      referralDiscount: state.referralValid ? state.referralDiscount : 0,
+      status: 'pending',
+      paid: false,
+      salonId: state.salonId,
+      createdAt: serverTimestamp()
+    });
+
+    // Redirecionar para página de sucesso
+    const params = new URLSearchParams({
+      salon:   state.salonId,
+      service: s.name,
+      date:    `${state.selectedDate.getDate()} de ${MONTHS[state.selectedDate.getMonth()]} de ${state.selectedDate.getFullYear()}`,
+      time:    state.selectedTime,
+      price:   finalPrice,
+      name,
+      refCode: newReferralCode
+    });
+    window.location.href = `success.html?${params.toString()}`;
+
+  } catch(e) {
+    console.error(e);
+    document.getElementById('screenLoading').style.display = 'none';
+    document.getElementById('screenConfirm').style.display = 'block';
+    document.getElementById('btnConfirm').disabled = false;
+    toast('❌ Erro ao confirmar. Tenta novamente.');
+  }
+};
+
+// ── UTILITÁRIOS ──
+function formatDate(date) {
+  return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
+}
+
+function generateReferralCode(name, salonId) {
+  const prefix = salonId.slice(0,3).toUpperCase();
+  const namePart = name.split(' ')[0].slice(0,4).toUpperCase();
+  const num = Math.floor(10 + Math.random() * 90);
+  return `${prefix}-${namePart}${num}`;
+}
+
+function showError(msg) {
+  document.querySelector('main').innerHTML = `<div class="container" style="text-align:center;padding:60px 0"><div style="font-size:32px;margin-bottom:16px">⚠️</div><div style="color:var(--muted)">${msg}</div></div>`;
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+init();
+</script>
+</body>
+</html>
