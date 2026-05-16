@@ -1,0 +1,12 @@
+{
+  "projects": {
+    "default": "bookit-51575"
+  },
+  "targets": {
+    "bookit-51575": {
+      "hosting": {
+        "zen-organic-pt": ["zen-organic-pt"]
+      }
+    }
+  }
+}
