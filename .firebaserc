@@ -5,8 +5,11 @@
   "targets": {
     "bookit-51575": {
       "hosting": {
-        "zen-organic-pt": ["zen-organic-pt"]
+        "zen-organic-pt": [
+          "zen-organic-pt"
+        ]
       }
     }
-  }
+  },
+  "etags": {}
 }
