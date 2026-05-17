@@ -2,389 +2,510 @@
 <html lang="pt-PT">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Zen Organic Hair Concept | Cabeleireiro em Telheiras</title>
-  <meta name="description" content="Cabeleireiro eco conscious em Telheiras. Cortes, coloração e tratamentos com foco em produtos orgânicos e cruelty-free." />
-  <meta property="og:title" content="Zen Organic Hair Concept" />
-  <meta property="og:description" content="Cabeleireiro eco conscious em Telheiras." />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Zen Organic — Atelier orgânico em Telheiras</title>
+  <meta name="description" content="Atelier de cabeleireiro com filosofia orgânica e vegan, em Telheiras. Cortes, coloração e tratamentos com produtos botânicos, livres de crueldade." />
+  <meta name="theme-color" content="#F2EDE0" />
+  <meta property="og:title" content="Zen Organic — Atelier orgânico em Telheiras" />
+  <meta property="og:description" content="Cabeleireiro com filosofia orgânica e vegan. Tendemos ao teu cabelo como cuidamos de um jardim." />
   <meta property="og:type" content="website" />
-  <meta property="og:image" content="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=1400&q=80" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
   <header class="header" id="header">
-    <div class="container header__inner">
-      <a class="brand" href="#top" aria-label="Zen Organic Hair Concept">
+    <div class="col-wide header__inner">
+      <a class="brand" href="#top" aria-label="Zen Organic — início">
         <div class="brand__mark" aria-hidden="true">Z</div>
-        <div class="brand__text">
+        <div>
           <div class="brand__name">Zen Organic</div>
-          <div class="brand__sub">Hair Concept · Telheiras</div>
+          <div class="brand__sub">Telheiras · Lisboa</div>
         </div>
       </a>
       <nav class="nav" aria-label="Menu principal">
+        <a href="#filosofia">Filosofia</a>
+        <a href="#ritual">Ritual</a>
         <a href="#servicos">Serviços</a>
-        <a href="#promocoes">Promoções</a>
-        <a href="#precos">Preços</a>
-        <a href="#galeria">Galeria</a>
-        <a href="#equipa">Equipa</a>
-        <a href="#localizacao">Localização</a>
-        <a href="#contactos">Contactos</a>
+        <a href="#ingredientes">Ingredientes</a>
+        <a href="#atelier">Atelier</a>
+        <a href="#contactos">Contacto</a>
       </nav>
       <div class="header__cta">
-        <a class="btn btn--ghost" href="https://bookit-51575.web.app/account.html?salon=demo" target="_blank" rel="noopener">A minha conta</a>
-        <a class="btn btn--primary" href="https://bookit-51575.web.app/?salon=demo" target="_blank" rel="noopener">
-          Marcar Agora
-        </a>
+        <a class="link" href="https://bookit-51575.web.app/account.html?salon=demo" target="_blank" rel="noopener">Conta</a>
+        <a class="btn btn--primary" href="https://bookit-51575.web.app/?salon=demo" target="_blank" rel="noopener">Marcar visita</a>
       </div>
-      <button class="burger" id="burger" aria-label="Abrir menu" aria-expanded="false">
+      <button class="burger" id="burger" aria-label="Menu" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
     </div>
-    <div class="mobileNav" id="mobileNav" hidden>
+    <nav class="mobileNav" id="mobileNav" hidden aria-label="Menu mobile">
+      <a href="#filosofia">Filosofia</a>
+      <a href="#ritual">Ritual</a>
       <a href="#servicos">Serviços</a>
-      <a href="#promocoes">Promoções</a>
-      <a href="#precos">Preços</a>
-      <a href="#galeria">Galeria</a>
-      <a href="#equipa">Equipa</a>
-      <a href="#localizacao">Localização</a>
-      <a href="#contactos">Contactos</a>
-      <a class="btn btn--ghost mobileNav__btn" href="https://bookit-51575.web.app/account.html?salon=demo" target="_blank" rel="noopener">A minha conta</a>
-      <a class="btn btn--primary mobileNav__btn" href="https://bookit-51575.web.app/?salon=demo" target="_blank" rel="noopener">Marcar Agora</a>
-    </div>
+      <a href="#ingredientes">Ingredientes</a>
+      <a href="#atelier">Atelier</a>
+      <a href="#contactos">Contacto</a>
+      <a class="btn btn--primary mobileNav__btn" href="https://bookit-51575.web.app/?salon=demo" target="_blank" rel="noopener">Marcar visita</a>
+    </nav>
   </header>
 
   <main id="top">
 
-    <!-- ── HERO ── -->
+    <!-- ── HERO ─────────────────────────────────────────────── -->
     <section class="hero">
-      <div class="container hero__grid">
+      <div class="col-wide hero__inner">
         <div class="hero__copy reveal">
-          <p class="pill">
-            <span class="pill__dot"></span>
-            Eco conscious · Organic · Cruelty-free
+          <div class="hero__eyebrow">
+            <span>Atelier · 2018</span>
+          </div>
+          <h1 class="hero__title">
+            Tendemos ao<br/>teu cabelo<br/>como cuidamos<br/>de um <em>jardim</em>.
+          </h1>
+          <p class="hero__lead">
+            Cabelo encarado como ritual — orgânico, vegan, sem pressa. Cortes, coloração e tratamentos botânicos no nosso atelier em Telheiras.
           </p>
-          <h1>Cabelo com<br/><em>resultados.</em><br/>Cuidado com<br/><em>consciência.</em></h1>
-          <p class="lead">Cortes, coloração e tratamentos capilares em Telheiras, com foco em produtos orgânicos e uma experiência verdadeiramente tranquila.</p>
           <div class="hero__actions">
             <a class="btn btn--primary btn--lg" href="https://bookit-51575.web.app/?salon=demo" target="_blank" rel="noopener">
-              Fazer marcação
-              <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              Marcar visita
             </a>
-            <a class="btn btn--ghost btn--lg" href="#precos">Ver preços</a>
+            <a class="btn btn--ghost btn--lg" href="#filosofia">Conhecer o lugar</a>
           </div>
-          <div class="hero__badges" aria-label="Destaques">
-            <div class="badge">✦ Sem parabenos</div>
-            <div class="badge">✦ Sem sulfatos</div>
-            <div class="badge">✦ Sem silicones</div>
-            <div class="badge">✦ Perto do metro</div>
-          </div>
-        </div>
-        <div class="hero__media reveal reveal--right" role="img" aria-label="Foto do salão">
-          <div class="hero__media-inner">
-            <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=1400&q=80" alt="Salão Zen Organic Hair Concept" loading="eager" />
-            <div class="hero__media-tag">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              Certificado Cruelty-Free
+          <div class="hero__meta">
+            <div class="hero__meta-item">
+              <span class="hero__meta-key">Localização</span>
+              <span class="hero__meta-val">Telheiras</span>
+            </div>
+            <div class="hero__meta-item">
+              <span class="hero__meta-key">Certificação</span>
+              <span class="hero__meta-val">Cruelty-free</span>
+            </div>
+            <div class="hero__meta-item">
+              <span class="hero__meta-key">Formulação</span>
+              <span class="hero__meta-val">100% vegan</span>
             </div>
           </div>
         </div>
+
+        <!-- Botanical decoration -->
+        <svg class="botanical reveal reveal--zoom" viewBox="0 0 280 600" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <!-- main stem -->
+          <path d="M 140 580 Q 132 400 138 220 Q 142 100 140 30"
+                stroke="#4F5938" stroke-width="1.2" fill="none" opacity=".6"/>
+          <!-- leaves left -->
+          <ellipse cx="115" cy="120" rx="22" ry="6.5" transform="rotate(-30 115 120)" fill="#4F5938" opacity=".5"/>
+          <ellipse cx="105" cy="180" rx="28" ry="8" transform="rotate(-35 105 180)" fill="#4F5938" opacity=".55"/>
+          <ellipse cx="100" cy="250" rx="32" ry="9" transform="rotate(-40 100 250)" fill="#4F5938" opacity=".5"/>
+          <ellipse cx="110" cy="320" rx="26" ry="7" transform="rotate(-32 110 320)" fill="#4F5938" opacity=".45"/>
+          <ellipse cx="118" cy="390" rx="22" ry="6" transform="rotate(-28 118 390)" fill="#4F5938" opacity=".4"/>
+          <ellipse cx="124" cy="450" rx="18" ry="5" transform="rotate(-25 124 450)" fill="#4F5938" opacity=".35"/>
+          <!-- leaves right -->
+          <ellipse cx="165" cy="155" rx="22" ry="6.5" transform="rotate(30 165 155)" fill="#4F5938" opacity=".5"/>
+          <ellipse cx="175" cy="215" rx="28" ry="8" transform="rotate(35 175 215)" fill="#4F5938" opacity=".55"/>
+          <ellipse cx="180" cy="285" rx="32" ry="9" transform="rotate(40 180 285)" fill="#4F5938" opacity=".5"/>
+          <ellipse cx="172" cy="355" rx="26" ry="7" transform="rotate(32 172 355)" fill="#4F5938" opacity=".45"/>
+          <ellipse cx="164" cy="420" rx="22" ry="6" transform="rotate(28 164 420)" fill="#4F5938" opacity=".4"/>
+          <ellipse cx="158" cy="478" rx="18" ry="5" transform="rotate(25 158 478)" fill="#4F5938" opacity=".35"/>
+          <!-- tiny berries -->
+          <circle cx="148" cy="60"  r="3" fill="#8B5E3C" opacity=".7"/>
+          <circle cx="138" cy="68"  r="2.5" fill="#8B5E3C" opacity=".6"/>
+          <circle cx="156" cy="78"  r="2" fill="#8B5E3C" opacity=".5"/>
+        </svg>
       </div>
-      <div class="hero__scroll-hint" aria-hidden="true">
-        <div class="hero__scroll-line"></div>
-        <span>scroll</span>
+
+      <div class="hero__scroll" aria-hidden="true">
+        <span>Descer</span>
       </div>
     </section>
 
-    <!-- ── SERVIÇOS ── -->
+
+    <!-- ── FILOSOFIA / MANIFESTO ──────────────────────────── -->
+    <section class="section section--alt" id="filosofia">
+      <div class="col">
+        <div class="manifesto reveal">
+          <p class="eyebrow" style="margin-bottom: 32px">— Filosofia</p>
+          <p class="manifesto__quote">
+            Acreditamos que o <em>cuidado</em> começa na <em>escolha</em>. O que aplicamos ao cabelo é tão estimado como o que colocamos no prato — orgânico, vegan, vivo.
+          </p>
+          <div class="manifesto__sig">Maria Sá · Fundadora</div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ── RITUAL ─────────────────────────────────────────── -->
+    <section class="section" id="ritual">
+      <div class="col-wide">
+        <div class="section-head reveal">
+          <div>
+            <div class="section-head__num">— 01</div>
+            <div class="section-head__label">A experiência</div>
+          </div>
+          <h2 class="section-head__title">O <em>ritual</em> Zen Organic.</h2>
+        </div>
+
+        <div class="ritual-grid">
+          <article class="ritual reveal" style="--d: .05s">
+            <div class="ritual__num">i</div>
+            <h3 class="ritual__name">A chegada</h3>
+            <p class="ritual__desc">
+              Diagnóstico capilar e conversa sobre o teu dia. Um chá quente, ervas locais, o teu tempo. Cada visita começa com sete minutos a ouvir.
+            </p>
+          </article>
+          <article class="ritual reveal" style="--d: .15s">
+            <div class="ritual__num">ii</div>
+            <h3 class="ritual__name">O cuidado</h3>
+            <p class="ritual__desc">
+              Lavagem com extractos botânicos, massagem capilar do couro cabeludo, e o serviço propriamente dito — corte, cor, tratamento — com fórmulas livres de sulfatos, parabenos e silicones.
+            </p>
+          </article>
+          <article class="ritual reveal" style="--d: .25s">
+            <div class="ritual__num">iii</div>
+            <h3 class="ritual__name">O regresso</h3>
+            <p class="ritual__desc">
+              Recomendação personalizada para o cuidado em casa. Não vendemos produtos — sugerimos os mesmos que usamos no atelier, livre escolha de onde os comprares.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ── QUOTE STRIP (testimonial-as-statement) ─────────── -->
+    <section class="section section--tight section--deep">
+      <div class="col-md">
+        <div class="quote-strip reveal">
+          <p class="quote-strip__text">
+            “Saí com a impressão de que tinha estado fora a fazer férias. O cabelo é apenas o início.”
+          </p>
+          <p class="quote-strip__attr">— Mariana B. · cliente desde 2021</p>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ── SERVIÇOS ───────────────────────────────────────── -->
     <section class="section" id="servicos">
-      <div class="container">
-        <div class="section__head reveal">
-          <span class="section__label">O que oferecemos</span>
-          <h2>Serviços</h2>
-          <p>Seleciona o que procuras — e marca em segundos.</p>
+      <div class="col-wide">
+        <div class="section-head reveal">
+          <div>
+            <div class="section-head__num">— 02</div>
+            <div class="section-head__label">Investimento</div>
+          </div>
+          <h2 class="section-head__title">Serviços &amp; <em>preços</em>.</h2>
         </div>
-        <div class="cards">
-          <article class="card reveal" style="--d:.05s">
-            <div class="card__icon">✂</div>
-            <h3>Corte &amp; Styling</h3>
-            <p>Corte feminino e masculino, brushing e finalização com produtos orgânicos.</p>
-            <a class="card__link" href="https://bookit-51575.web.app/?salon=demo" target="_blank" rel="noopener">Marcar <span>→</span></a>
-          </article>
-          <article class="card reveal" style="--d:.12s">
-            <div class="card__icon">◈</div>
-            <h3>Coloração</h3>
-            <p>Raiz, cor global, tonalização e técnicas personalizadas com cor orgânica.</p>
-            <a class="card__link" href="https://bookit-51575.web.app/?salon=demo" target="_blank" rel="noopener">Marcar <span>→</span></a>
-          </article>
-          <article class="card reveal" style="--d:.19s">
-            <div class="card__icon">◇</div>
-            <h3>Tratamentos</h3>
-            <p>Hidratação profunda, reparação, anti-frizz e cuidado do couro cabeludo.</p>
-            <a class="card__link" href="https://bookit-51575.web.app/?salon=demo" target="_blank" rel="noopener">Marcar <span>→</span></a>
-          </article>
-          <article class="card reveal" style="--d:.26s">
-            <div class="card__icon">◉</div>
-            <h3>Barbearia</h3>
-            <p>Corte masculino, modelação de barba e manutenção.</p>
-            <a class="card__link" href="https://bookit-51575.web.app/?salon=demo" target="_blank" rel="noopener">Marcar <span>→</span></a>
-          </article>
+
+        <div class="prices">
+          <div class="reveal">
+            <h3 class="prices__col-title">Para <em>elas</em></h3>
+            <ul class="prices__list" id="prices-woman-list">
+              <li><span class="prices__name">Corte &amp; brushing</span><span class="prices__price">35 €</span></li>
+              <li><span class="prices__name">Brushing</span><span class="prices__price">18 €</span></li>
+              <li><span class="prices__name">Coloração <em>a partir de</em></span><span class="prices__price">45 €</span></li>
+              <li><span class="prices__name">Madeixas <em>a partir de</em></span><span class="prices__price">70 €</span></li>
+              <li><span class="prices__name">Tratamento botânico</span><span class="prices__price">25 €</span></li>
+              <li><span class="prices__name">Pacote completo <em>cor + corte + tratamento</em></span><span class="prices__price">75 €</span></li>
+            </ul>
+          </div>
+          <div class="reveal" style="--d:.1s">
+            <h3 class="prices__col-title">Para <em>eles</em></h3>
+            <ul class="prices__list" id="prices-man-list">
+              <li><span class="prices__name">Corte masculino</span><span class="prices__price">18 €</span></li>
+              <li><span class="prices__name">Corte &amp; barba</span><span class="prices__price">25 €</span></li>
+              <li><span class="prices__name">Barba</span><span class="prices__price">12 €</span></li>
+              <li><span class="prices__name">Tratamento couro cabeludo</span><span class="prices__price">20 €</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <p class="prices__note reveal">
+          Valores indicativos. A coloração e madeixas variam consoante o comprimento e densidade do cabelo. Pedimos a primeira visita com algum tempo para diagnóstico — depois, cada agenda é desenhada à tua medida.
+        </p>
+
+        <div class="prices__cta reveal">
+          <a class="btn btn--primary" href="https://bookit-51575.web.app/?salon=demo" target="_blank" rel="noopener">Marcar online</a>
+          <span class="text-muted" style="font-size: 13px">ou liga <strong style="color: var(--ink);">213 456 789</strong></span>
         </div>
       </div>
     </section>
 
-    <!-- ── PROMOÇÕES ── -->
-    <section class="section section--promos section--alt" id="promocoes">
-      <div class="container">
-        <div class="section__head reveal">
-          <span class="section__label">Ofertas especiais</span>
-          <h2>Promoções</h2>
-          <p>Aproveita as nossas ofertas exclusivas — disponíveis por tempo limitado.</p>
+
+    <!-- ── INGREDIENTES ───────────────────────────────────── -->
+    <section class="section section--alt" id="ingredientes">
+      <div class="col-wide">
+        <div class="section-head reveal">
+          <div>
+            <div class="section-head__num">— 03</div>
+            <div class="section-head__label">O que usamos</div>
+          </div>
+          <h2 class="section-head__title">A nossa farmácia <em>botânica</em>.</h2>
         </div>
+
+        <div class="ingredients">
+          <div class="ingredients__copy reveal">
+            <p class="dropcap">
+              Cada produto que entra no atelier passa por um filtro simples: tem origem natural, é vegan, livre de crueldade e composto por ingredientes que reconhecemos. Trabalhamos com marcas pequenas e fórmulas curtas — porque o cabelo, como a pele, prefere o essencial.
+            </p>
+            <p>
+              Não vendemos produtos. Quando faz sentido, recomendamos. A nossa escolha está visível, sempre — basta perguntares no balcão.
+            </p>
+          </div>
+
+          <div class="principles reveal" style="--d:.1s">
+            <div class="principle">
+              <div class="principle__icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22c4-2 8-6 8-12V6l-8-4-8 4v4c0 6 4 10 8 12z"/></svg>
+              </div>
+              <div>
+                <h4 class="principle__name">Cruelty-free</h4>
+                <p class="principle__desc">Nenhum produto testado em animais. Certificações Leaping Bunny e PETA.</p>
+              </div>
+            </div>
+            <div class="principle">
+              <div class="principle__icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v20M2 12h20M5 5l14 14M19 5L5 19"/></svg>
+              </div>
+              <div>
+                <h4 class="principle__name">Sem sulfatos</h4>
+                <p class="principle__desc">SLS e SLES fora — preservamos o couro cabeludo e o equilíbrio natural.</p>
+              </div>
+            </div>
+            <div class="principle">
+              <div class="principle__icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+              </div>
+              <div>
+                <h4 class="principle__name">Sem silicones</h4>
+                <p class="principle__desc">Brilho que vem do cabelo saudável, não de uma película de plástico.</p>
+              </div>
+            </div>
+            <div class="principle">
+              <div class="principle__icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12c0-5 4-9 9-9s9 4 9 9-4 9-9 9-9-4-9-9z"/><path d="M9 12h6M12 9v6"/></svg>
+              </div>
+              <div>
+                <h4 class="principle__name">Vegan certificado</h4>
+                <p class="principle__desc">Zero ingredientes de origem animal — incluindo a queratina e o mel.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ── PROMOÇÕES (dynamic from localStorage) ─────────── -->
+    <section class="section" id="promocoes">
+      <div class="col-wide">
+        <div class="section-head reveal">
+          <div>
+            <div class="section-head__num">— 04</div>
+            <div class="section-head__label">Em curso</div>
+          </div>
+          <h2 class="section-head__title">Notícias do <em>atelier</em>.</h2>
+        </div>
+
         <div id="promos-grid" class="promos-grid">
-          <article class="promo-card promo-card--featured reveal" style="--d:.04s">
-            <div class="promo-card__inner">
-              <div class="promo-tag">✦ Destaque</div>
-              <h3>Primavera em beleza</h3>
-              <p>Coloração + tratamento de hidratação com 20% de desconto durante todo o mês.</p>
-              <div class="promo-price"><span class="promo-price__old">56€</span><span class="promo-price__new">45€</span></div>
-              <a class="btn btn--primary" href="https://bookit-51575.web.app/?salon=demo" target="_blank" rel="noopener">
-                Aproveitar oferta <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-              </a>
+          <article class="promo-card">
+            <div class="promo-tag">Sazonal</div>
+            <div>
+              <h3>Primavera em rebento</h3>
+              <p>Coloração orgânica + tratamento botânico de hidratação, com vinte por cento de redução durante o mês de Maio. Pacote válido para primeiras visitas e clientes recorrentes.</p>
             </div>
-            <div class="promo-card__deco" aria-hidden="true">✿</div>
-          </article>
-          <article class="promo-card reveal" style="--d:.12s">
-            <div class="promo-tag promo-tag--subtle">Novidade</div>
-            <h3>Pack Noiva</h3>
-            <p>Penteado + tratamento de brilho + prova incluída.</p>
-            <div class="promo-price"><span class="promo-price__new">Sob consulta</span></div>
-            <a class="promo-link" href="https://bookit-51575.web.app/?salon=demo" target="_blank" rel="noopener">Saber mais →</a>
-          </article>
-          <article class="promo-card reveal" style="--d:.20s">
-            <div class="promo-tag promo-tag--subtle">Fidelização</div>
-            <h3>Zen Club</h3>
-            <p>Cria conta e acumula pontos a cada visita. Na 10.ª visita, desconto especial.</p>
-            <div class="promo-price"><span class="promo-price__new">Grátis 🎁</span></div>
-            <a class="promo-link" href="https://bookit-51575.web.app/account.html?salon=demo" target="_blank" rel="noopener">Criar conta →</a>
+            <a class="promo-link" href="https://bookit-51575.web.app/?salon=demo" target="_blank" rel="noopener">Marcar</a>
           </article>
         </div>
       </div>
     </section>
 
-    <!-- ── PREÇOS ── -->
-    <section class="section section--alt" id="precos">
-      <div class="container">
-        <div class="section__head reveal">
-          <span class="section__label">Transparência total</span>
-          <h2>Preços</h2>
-          <p>Valores indicativos — atualizados pelo salão.</p>
+
+    <!-- ── GALERIA ─────────────────────────────────────────── -->
+    <section class="section section--alt" id="galeria">
+      <div class="col-wide">
+        <div class="section-head reveal">
+          <div>
+            <div class="section-head__num">— 05</div>
+            <div class="section-head__label">Trabalho recente</div>
+          </div>
+          <h2 class="section-head__title">A nossa <em>composição</em>.</h2>
         </div>
-        <div class="pricing">
-          <div class="pricing__col reveal" style="--d:.05s">
-            <h3>Mulher</h3>
-            <ul id="prices-woman-list">
-              <li><span>Corte + Brushing</span><strong>35€</strong></li>
-              <li><span>Brushing</span><strong>18€</strong></li>
-              <li><span>Coloração (a partir de)</span><strong>45€</strong></li>
-              <li><span>Madeixas (a partir de)</span><strong>70€</strong></li>
-              <li><span>Tratamento (a partir de)</span><strong>25€</strong></li>
-            </ul>
-          </div>
-          <div class="pricing__col reveal" style="--d:.12s">
-            <h3>Homem</h3>
-            <ul id="prices-man-list">
-              <li><span>Corte</span><strong>18€</strong></li>
-              <li><span>Corte + Barba</span><strong>25€</strong></li>
-              <li><span>Barba</span><strong>12€</strong></li>
-              <li><span>Tratamento couro cabeludo</span><strong>20€</strong></li>
-            </ul>
-          </div>
-          <div class="pricing__cta reveal" style="--d:.19s">
-            <div class="pricing__cta-leaf" aria-hidden="true">✿</div>
-            <h3>Pronto para marcar?</h3>
-            <p>Escolhe o horário perfeito e confirma online, sem chamadas.</p>
-            <a class="btn btn--primary" href="https://bookit-51575.web.app/?salon=demo" target="_blank" rel="noopener">Marcar no Book It</a>
-          </div>
+
+        <div id="galleryGrid" class="gallery"></div>
+        <div id="galleryEmpty" class="gallery-empty" hidden>
+          <div class="gallery-empty__icon">✿</div>
+          <p class="gallery-empty__text">
+            <em>Em composição</em>
+            A galeria está a ser preparada com calma. Volta em breve.
+          </p>
         </div>
       </div>
     </section>
 
-    <!-- ── GALERIA ── -->
-    <section class="section" id="galeria">
-      <div class="container">
-        <div class="section__head reveal">
-          <span class="section__label">O nosso trabalho</span>
-          <h2>Galeria</h2>
-          <p>Fotos do salão e dos nossos trabalhos.</p>
-        </div>
-        <div class="gallery" id="galleryGrid">
-          <!-- Preenchido pelo script.js via localStorage zen_gallery -->
-        </div>
-        <div id="galleryEmpty" style="display:none;text-align:center;padding:40px 20px;color:var(--muted);background:var(--bg-card);border-radius:var(--r-lg);border:1px dashed var(--line-mid)">
-          <div style="font-size:32px;margin-bottom:10px">📷</div>
-          <div style="font-size:14px">Em breve — estamos a preparar a galeria.</div>
-        </div>
-      </div>
-    </section>
 
-    <!-- ── TESTEMUNHOS ── -->
-    <section class="section section--alt">
-      <div class="container">
-        <div class="section__head reveal">
-          <span class="section__label">Clientes satisfeitos</span>
-          <h2>O que dizem</h2>
-        </div>
-        <div class="quotes">
-          <figure class="quote reveal" style="--d:.05s">
-            <div class="quote__stars">★★★★★</div>
-            <blockquote>"Ambiente super tranquilo e atendimento impecável. Saí mesmo feliz com o corte."</blockquote>
-            <figcaption>— Cliente Zen</figcaption>
-          </figure>
-          <figure class="quote reveal" style="--d:.12s">
-            <div class="quote__stars">★★★★★</div>
-            <blockquote>"Adorei o cuidado e a atenção aos detalhes. Recomendo muito a toda a gente!"</blockquote>
-            <figcaption>— Cliente Zen</figcaption>
-          </figure>
-          <figure class="quote reveal" style="--d:.19s">
-            <div class="quote__stars">★★★★★</div>
-            <blockquote>"Finalmente um espaço com abordagem mais consciente e produtos genuinamente suaves."</blockquote>
-            <figcaption>— Cliente Zen</figcaption>
-          </figure>
-        </div>
-      </div>
-    </section>
-
-    <!-- ── EQUIPA ── -->
+    <!-- ── EQUIPA ─────────────────────────────────────────── -->
     <section class="section" id="equipa">
-      <div class="container">
-        <div class="section__head reveal">
-          <span class="section__label">As nossas pessoas</span>
-          <h2>Equipa</h2>
-          <p>Profissionais apaixonados pelo cabelo e pelo bem-estar.</p>
+      <div class="col-wide">
+        <div class="section-head reveal">
+          <div>
+            <div class="section-head__num">— 06</div>
+            <div class="section-head__label">Quem somos</div>
+          </div>
+          <h2 class="section-head__title">As mãos do <em>atelier</em>.</h2>
         </div>
-        <div class="team-grid" id="teamGrid">
-          <!-- Preenchido pelo script.js via localStorage zen_team -->
-        </div>
-        <div id="teamEmpty" style="display:none;text-align:center;padding:40px 20px;color:var(--muted);background:var(--bg-card);border-radius:var(--r-lg);border:1px dashed var(--line-mid)">
-          <div style="font-size:32px;margin-bottom:10px">👥</div>
-          <div style="font-size:14px">Em breve — a nossa equipa estará aqui.</div>
+
+        <div id="teamGrid" class="team"></div>
+        <div id="teamEmpty" class="gallery-empty" hidden>
+          <div class="gallery-empty__icon">✿</div>
+          <p class="gallery-empty__text">
+            <em>Em apresentação</em>
+            A equipa aparecerá aqui em breve.
+          </p>
         </div>
       </div>
     </section>
 
-    <!-- ── PARCERIAS ── -->
-    <section class="section section--alt" id="parcerias">
-      <div class="container">
-        <div class="section__head reveal">
-          <span class="section__label">Com quem trabalhamos</span>
-          <h2>Parcerias</h2>
-          <p>Marcas orgânicas e cruelty-free que partilham os nossos valores.</p>
-        </div>
-        <div class="partners-grid" id="partnersGrid">
-          <!-- preenchido pelo script.js via localStorage zen_partners -->
-        </div>
-        <div id="partnersEmpty" style="display:none;text-align:center;padding:30px;color:var(--muted);background:var(--bg-card);border-radius:var(--r-lg);border:1px dashed var(--line-mid)">
-          <div style="font-size:32px;margin-bottom:10px">🤝</div>
-          <div style="font-size:14px">Em breve — as nossas parcerias estarão aqui.</div>
-        </div>
-      </div>
-    </section>
 
-    <!-- ── ZEN CLUB ── -->
-    <section class="section" id="zenclub">
-      <div class="container">
-        <div class="zenclub-wrap reveal">
-          <div class="zenclub-copy">
-            <span class="section__label">Programa de fidelização</span>
-            <h2>Zen Club</h2>
-            <p>Junta-te ao nosso clube e começa a ganhar recompensas a cada visita.</p>
-            <div class="zenclub-benefits">
-              <div class="zenclub-benefit"><span>⭐</span><div><strong>Pontos por visita</strong><span>Acumula e troca por descontos</span></div></div>
-              <div class="zenclub-benefit"><span>🎂</span><div><strong>Desconto de aniversário</strong><span>Surpresa especial no teu mês</span></div></div>
-              <div class="zenclub-benefit"><span>🔗</span><div><strong>Código de referido</strong><span>Traz amigos e ambos ganham</span></div></div>
-              <div class="zenclub-benefit"><span>🎁</span><div><strong>Promoções exclusivas</strong><span>Só para membros do clube</span></div></div>
+    <!-- ── ATELIER (location/space) ────────────────────────── -->
+    <section class="section section--deep" id="atelier">
+      <div class="col-wide">
+        <div class="atelier">
+          <div class="atelier__image reveal reveal--zoom" aria-hidden="true"></div>
+          <div class="reveal" style="--d:.1s">
+            <p class="eyebrow" style="margin-bottom: 24px">— 07 · O espaço</p>
+            <h3>Um lugar para parar.</h3>
+            <p class="lead">
+              Pequeno por opção. Quatro lugares de trabalho, luz natural quase o dia inteiro, plantas vivas e um silêncio que só se quebra se quiseres conversar.
+            </p>
+
+            <address class="atelier__address">
+              <strong>Zen Organic Hair Concept</strong><br/>
+              R. Prof. Francisco Gentil, 16A<br/>
+              1600-236 Lisboa · Telheiras
+            </address>
+
+            <ul class="atelier__hours" id="hours-list">
+              <li><span>Segunda — Sexta</span><strong>10h00 — 19h00</strong></li>
+              <li><span>Sábado</span><strong>10h00 — 18h00</strong></li>
+              <li><span>Domingo</span><strong>Fechado</strong></li>
+            </ul>
+
+            <div class="atelier__actions">
+              <a class="btn btn--primary" href="https://bookit-51575.web.app/?salon=demo" target="_blank" rel="noopener">Marcar visita</a>
+              <a class="btn" target="_blank" rel="noopener" href="https://www.google.com/maps?q=R.%20Prof.%20Francisco%20Gentil%2016A%2C%201600-236%20Lisboa">Ver no mapa</a>
             </div>
-            <a class="btn btn--primary btn--lg" href="https://bookit-51575.web.app/account.html?salon=demo" target="_blank" rel="noopener">
-              Criar conta gratuita →
+          </div>
+        </div>
+
+        <div class="map reveal">
+          <iframe
+            title="Mapa Zen Organic"
+            loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+            src="https://www.google.com/maps?q=R.%20Prof.%20Francisco%20Gentil%2016A%2C%201600-236%20Lisboa&output=embed"></iframe>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ── ZEN CLUB ───────────────────────────────────────── -->
+    <section class="section" id="zenclub">
+      <div class="col-md">
+        <div class="club">
+          <p class="eyebrow reveal" style="margin-bottom: 24px">— 08 · Programa de fidelização</p>
+          <h2 class="club__heading reveal">Junta-te ao <em>Zen Club</em>.</h2>
+          <p class="club__lead reveal" style="--d:.1s">
+            Cria uma conta gratuita e começa a acumular benefícios. Sem mensalidade, sem letras pequeninas. Só o que faz sentido.
+          </p>
+
+          <div class="club__benefits">
+            <div class="club__benefit reveal" style="--d:.1s">
+              <div class="club__benefit-num">i</div>
+              <h4 class="club__benefit-title">Pontos por visita</h4>
+              <p class="club__benefit-desc">+10 pontos a cada serviço pago. Trocas-os por desconto à quinta visita.</p>
+            </div>
+            <div class="club__benefit reveal" style="--d:.18s">
+              <div class="club__benefit-num">ii</div>
+              <h4 class="club__benefit-title">Mês de aniversário</h4>
+              <p class="club__benefit-desc">Desconto especial automático no mês em que fazes anos.</p>
+            </div>
+            <div class="club__benefit reveal" style="--d:.26s">
+              <div class="club__benefit-num">iii</div>
+              <h4 class="club__benefit-title">Código de referido</h4>
+              <p class="club__benefit-desc">Partilha o teu código. Quem o usa ganha 10%, e tu também.</p>
+            </div>
+            <div class="club__benefit reveal" style="--d:.34s">
+              <div class="club__benefit-num">iv</div>
+              <h4 class="club__benefit-title">Acesso a novidades</h4>
+              <p class="club__benefit-desc">Pré-acesso a novos serviços e convites para eventos privados do atelier.</p>
+            </div>
+          </div>
+
+          <a class="btn btn--primary btn--lg reveal" href="https://bookit-51575.web.app/account.html?salon=demo" target="_blank" rel="noopener" style="--d:.4s">
+            Criar conta gratuita
+          </a>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ── PARCERIAS (dynamic) ───────────────────────────── -->
+    <section class="section section--alt" id="parcerias">
+      <div class="col-wide">
+        <div class="section-head reveal">
+          <div>
+            <div class="section-head__num">— 09</div>
+            <div class="section-head__label">Marcas que escolhemos</div>
+          </div>
+          <h2 class="section-head__title">As nossas <em>parcerias</em>.</h2>
+        </div>
+
+        <div id="partnersGrid" class="partners-grid"></div>
+        <div id="partnersEmpty" class="gallery-empty" hidden>
+          <div class="gallery-empty__icon">✿</div>
+          <p class="gallery-empty__text">
+            <em>Em curadoria</em>
+            As marcas com quem trabalhamos aparecerão aqui.
+          </p>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ── CONTACTOS ──────────────────────────────────────── -->
+    <section class="section" id="contactos">
+      <div class="col-wide">
+        <div class="section-head reveal">
+          <div>
+            <div class="section-head__num">— 10</div>
+            <div class="section-head__label">Em conversa</div>
+          </div>
+          <h2 class="section-head__title">Diz-nos <em>olá</em>.</h2>
+        </div>
+
+        <div class="contact">
+          <div class="contact__col reveal">
+            <h3>Marcar uma <em>visita</em>.</h3>
+            <p>
+              A nossa agenda online está sempre disponível. Não há esperas em chamadas — escolhes o teu serviço, colaborador, dia e hora em menos de dois minutos.
+            </p>
+            <a class="btn btn--primary" href="https://bookit-51575.web.app/?salon=demo" target="_blank" rel="noopener">
+              Marcar online
             </a>
           </div>
-        </div>
-      </div>
-    </section>
 
-    <!-- ── LOCALIZAÇÃO ── -->
-    <section class="section section--alt" id="localizacao">
-      <div class="container">
-        <div class="section__head reveal">
-          <span class="section__label">Como chegar</span>
-          <h2>Localização</h2>
-          <p>Telheiras · Lisboa — a poucos minutos do metro.</p>
-        </div>
-        <div class="location">
-          <div class="location__info reveal">
-            <div class="location__block">
-              <h3>Morada</h3>
-              <address>
-                <strong>Zen Organic Hair Concept</strong><br/>
-                R. Prof. Francisco Gentil 16A<br/>
-                1600-236 Lisboa
-              </address>
-              <div class="location__actions">
-                <a class="btn btn--ghost" target="_blank" rel="noopener" href="https://www.google.com/maps?q=R.%20Prof.%20Francisco%20Gentil%2016A%2C%201600-236%20Lisboa">Abrir no Google Maps</a>
-                <a class="btn btn--primary" href="https://bookit-51575.web.app/?salon=demo" target="_blank" rel="noopener">Marcar aqui</a>
-              </div>
-            </div>
-            <div class="hours">
-              <h3>Horário</h3>
-              <ul id="hours-list">
-                <li><span>Seg–Sex</span><strong>10:00 – 19:00</strong></li>
-                <li><span>Sábado</span><strong>10:00 – 18:00</strong></li>
-                <li><span>Domingo</span><strong>Fechado</strong></li>
-              </ul>
-            </div>
-          </div>
-          <div class="location__map reveal reveal--right" aria-label="Mapa de localização">
-            <iframe title="Mapa Zen Organic Hair Concept" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-              src="https://www.google.com/maps?q=R.%20Prof.%20Francisco%20Gentil%2016A%2C%201600-236%20Lisboa&output=embed">
-            </iframe>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ── CONTACTOS ── -->
-    <section class="section" id="contactos">
-      <div class="container">
-        <div class="section__head reveal">
-          <span class="section__label">Fala connosco</span>
-          <h2>Contactos</h2>
-          <p>Para dúvidas, envia mensagem. Para marcações, usa o Book It.</p>
-        </div>
-        <div class="contact">
-          <div class="contact__card contact__card--accent reveal" style="--d:.05s">
-            <div class="contact__icon" aria-hidden="true">◈</div>
-            <h3>Marcação Online</h3>
-            <p>Marca a qualquer hora, 24/7, sem precisar de ligar.</p>
-            <a class="btn btn--primary" href="https://bookit-51575.web.app/?salon=demo" target="_blank" rel="noopener">Marcar no Book It</a>
-          </div>
-          <div class="contact__card reveal" style="--d:.12s">
-            <div class="contact__icon" aria-hidden="true">✉</div>
-            <h3>Mensagem Rápida</h3>
-            <p>Para dúvidas ou informações — respondemos assim que possível.</p>
-            <form id="contactForm" novalidate>
-              <div class="field">
-                <input name="name" type="text" id="fname" placeholder=" " required />
+          <div class="contact__col reveal" style="--d:.1s">
+            <h3>Uma <em>dúvida</em>?</h3>
+            <p>
+              Para tudo o que não seja marcação — perguntas sobre os serviços, encomendas privadas, eventos — fala connosco aqui.
+            </p>
+            <form id="contactForm" class="contact__form" novalidate>
+              <div class="row">
                 <label for="fname">O teu nome</label>
+                <input type="text" id="fname" name="name" required />
               </div>
-              <div class="field">
-                <textarea name="message" id="fmsg" rows="3" placeholder=" " required></textarea>
+              <div class="row">
                 <label for="fmsg">A tua mensagem</label>
+                <textarea id="fmsg" name="message" required rows="3"></textarea>
               </div>
-              <button class="btn btn--ghost btn--full" type="submit">Enviar mensagem</button>
+              <button class="btn" type="submit">Enviar mensagem</button>
             </form>
           </div>
         </div>
@@ -393,73 +514,86 @@
 
   </main>
 
+
   <footer class="footer">
-    <div class="container footer__inner">
-      <div class="footer__brand">
-        <div class="brand__mark brand__mark--sm" aria-hidden="true">Z</div>
+    <div class="col-wide">
+      <div class="footer__top">
         <div>
-          <div class="footer__name">Zen Organic Hair Concept</div>
-          <div class="footer__loc">Telheiras · Lisboa · R. Prof. Francisco Gentil 16A</div>
+          <div class="footer__brand-mark"><em>Zen Organic</em></div>
+          <p class="footer__brand-text">
+            Atelier orgânico em Telheiras. Cabelo encarado como ritual — botânico, vegan, sem pressa.
+          </p>
+        </div>
+        <div class="footer__col">
+          <div class="footer__col-label">Atelier</div>
+          <ul>
+            <li><a href="#filosofia">Filosofia</a></li>
+            <li><a href="#ritual">Ritual</a></li>
+            <li><a href="#servicos">Serviços</a></li>
+            <li><a href="#ingredientes">Ingredientes</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <div class="footer__col-label">Visitar</div>
+          <ul>
+            <li><a href="#atelier">Morada</a></li>
+            <li><a href="#contactos">Contacto</a></li>
+            <li><a href="https://www.google.com/maps?q=R.%20Prof.%20Francisco%20Gentil%2016A%2C%201600-236%20Lisboa" target="_blank" rel="noopener">Mapa</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <div class="footer__col-label">Cliente</div>
+          <ul>
+            <li><a href="https://bookit-51575.web.app/?salon=demo" target="_blank" rel="noopener">Marcar</a></li>
+            <li><a href="https://bookit-51575.web.app/account.html?salon=demo" target="_blank" rel="noopener">A minha conta</a></li>
+            <li><a href="#zenclub">Zen Club</a></li>
+          </ul>
         </div>
       </div>
-      <div class="footer__links">
-        <a href="https://bookit-51575.web.app/?salon=demo" target="_blank" rel="noopener">Fazer marcação</a>
-        <a href="https://bookit-51575.web.app/account.html?salon=demo" target="_blank" rel="noopener">Zen Club</a>
-        <a href="#precos">Preços</a>
-        <a href="#localizacao">Localização</a>
+      <div class="footer__bottom">
+        <span>© <span id="year">2026</span> Zen Organic Hair Concept</span>
+        <div class="footer__social">
+          <a href="https://instagram.com/zenorganicconcept" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+            </svg>
+          </a>
+          <a href="https://facebook.com/zenorganicconcept" target="_blank" rel="noopener" aria-label="Facebook">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+            </svg>
+          </a>
+        </div>
       </div>
-      <div class="footer__social">
-        <a href="https://instagram.com/zenorganicconcept" target="_blank" rel="noopener" aria-label="Instagram" class="footer__social-link">
-          <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-        </a>
-        <a href="https://facebook.com/zenorganicconcept" target="_blank" rel="noopener" aria-label="Facebook" class="footer__social-link">
-          <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-        </a>
-      </div>
-      <p class="footer__copy">© <span id="year"></span> Zen Organic Hair Concept · Todos os direitos reservados</p>
     </div>
   </footer>
 
-  <!-- ── POPUP ZEN CLUB ── -->
+
+  <!-- ── ZEN CLUB POPUP ──────────────────────────────────── -->
   <div id="popupOverlay" class="popup-overlay" role="dialog" aria-modal="true" aria-labelledby="popupTitle" aria-hidden="true">
     <div id="popupBox" class="popup">
-      <button class="popup__close" type="button" aria-label="Fechar popup" data-popup-close>✕</button>
-      <div class="popup__icon" aria-hidden="true">Z</div>
-      <h2 id="popupTitle">Junta-te ao<br/><em>Zen Club</em></h2>
-      <p class="popup__lead">Cria uma conta gratuita e começa a ganhar recompensas a cada visita.</p>
-      <div class="popup__benefits">
-        <div class="popup__benefit">
-          <div class="popup__benefit-icon" aria-hidden="true">⭐</div>
-          <div>
-            <div class="popup__benefit-title">Pontos a cada visita</div>
-            <div class="popup__benefit-desc">Acumula pontos e troca por descontos exclusivos</div>
-          </div>
-        </div>
-        <div class="popup__benefit">
-          <div class="popup__benefit-icon" aria-hidden="true">🎂</div>
-          <div>
-            <div class="popup__benefit-title">Desconto de aniversário</div>
-            <div class="popup__benefit-desc">Recebe automaticamente um desconto especial no teu mês</div>
-          </div>
-        </div>
-        <div class="popup__benefit">
-          <div class="popup__benefit-icon" aria-hidden="true">🔗</div>
-          <div>
-            <div class="popup__benefit-title">Código de referido único</div>
-            <div class="popup__benefit-desc">Traz amigos e ambos ganham desconto na próxima visita</div>
-          </div>
-        </div>
-        <div class="popup__benefit">
-          <div class="popup__benefit-icon" aria-hidden="true">🎁</div>
-          <div>
-            <div class="popup__benefit-title">Promoções exclusivas</div>
-            <div class="popup__benefit-desc">Acede a ofertas especiais só para membros do clube</div>
-          </div>
-        </div>
+      <button class="popup__close" type="button" aria-label="Fechar" data-popup-close>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+      <div class="popup__mark">Z</div>
+      <h2 class="popup__title" id="popupTitle">Junta-te ao <em>Zen Club</em>.</h2>
+      <p class="popup__lead">
+        Conta gratuita. Pontos por visita. Desconto de aniversário. Código de referido. Tudo o que faz sentido — nada que não faça.
+      </p>
+      <ul class="popup__benefits">
+        <li><span class="popup__benefit-num">i</span><div><strong>Pontos por visita</strong><span>+10 a cada serviço pago, sem caducidade.</span></div></li>
+        <li><span class="popup__benefit-num">ii</span><div><strong>Mês de aniversário</strong><span>Desconto especial automático no teu mês.</span></div></li>
+        <li><span class="popup__benefit-num">iii</span><div><strong>Código de referido</strong><span>Partilha, e ambos recebem.</span></div></li>
+      </ul>
+      <div class="popup__actions">
+        <a class="btn btn--primary btn--lg" href="https://bookit-51575.web.app/account.html?salon=demo" target="_blank" rel="noopener">
+          Criar conta gratuita
+        </a>
+        <button class="btn" type="button" data-popup-close>Agora não</button>
       </div>
-      <a class="btn btn--primary btn--full btn--lg" href="https://bookit-51575.web.app/account.html?salon=demo" target="_blank" rel="noopener" style="margin-bottom:8px">Criar conta gratuita →</a>
-      <button class="btn btn--ghost btn--full" type="button" data-popup-close>Agora não</button>
-      <p class="popup__login">Já tens conta? <a href="https://bookit-51575.web.app/account.html?salon=demo" target="_blank" rel="noopener">Entra aqui</a></p>
+      <p class="popup__login">Já tens conta? <a href="https://bookit-51575.web.app/account.html?salon=demo" target="_blank" rel="noopener">Entrar</a></p>
     </div>
   </div>
 
