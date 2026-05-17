@@ -367,7 +367,49 @@
       <!-- DASHBOARD -->
       <div class="panel active" id="panel-dashboard">
         <div class="panel-title">Olá! 👋</div>
-        <p class="panel-sub">O que queres atualizar hoje no site?</p>
+        <p class="panel-sub">Hoje no salão · estado do site</p>
+
+        <!-- Live bookings widget (reads BookIt Firestore) -->
+        <div class="admin-card" style="background: linear-gradient(135deg, rgba(107,124,90,.06), rgba(107,124,90,.01)); border-color: rgba(107,124,90,.22)">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; flex-wrap:wrap; gap:10px">
+            <div>
+              <h3 style="margin:0">Marcações de hoje no Book It</h3>
+              <p style="margin:4px 0 0; font-size:13px; color: var(--muted)">
+                <span id="bk-date" style="font-weight:500">—</span> · <span id="bk-status" style="font-size:11px; padding:2px 8px; background:rgba(40,34,26,.06); border-radius:999px">a carregar…</span>
+              </p>
+            </div>
+            <a class="btn btn-primary" href="https://bookit-51575.web.app/admin.html" target="_blank" rel="noopener">
+              Gerir marcações no Book It →
+            </a>
+          </div>
+
+          <div class="stats-grid" style="margin-top:14px">
+            <div class="stat-card">
+              <div class="stat-label">Marcações</div>
+              <div class="stat-value" id="bk-total">—</div>
+              <div class="stat-sub">total hoje</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Pendentes</div>
+              <div class="stat-value" id="bk-pending">—</div>
+              <div class="stat-sub">a aguardar confirmação</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Confirmadas</div>
+              <div class="stat-value" id="bk-confirmed">—</div>
+              <div class="stat-sub">prontas para receber</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Faturação</div>
+              <div class="stat-value" id="bk-revenue">—</div>
+              <div class="stat-sub">marcações pagas</div>
+            </div>
+          </div>
+
+          <div id="bk-list" style="margin-top:14px"></div>
+        </div>
+
+        <div class="panel-sub" style="margin-top:32px; margin-bottom:12px">Conteúdo do site</div>
 
         <div class="stats-grid">
           <div class="stat-card">
@@ -683,6 +725,81 @@
 </div>
 
 <div id="toast">✓ Guardado com sucesso!</div>
+
+<!-- ── BOOKINGS WIDGET (reads BookIt's Firestore in real-time, anonymous) ── -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import {
+  getFirestore, collection, query, where, orderBy, onSnapshot
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const app = initializeApp({
+  apiKey: "AIzaSyABK6W0yTe_EQfna5_Sz7DcI9nPwvh5TNw",
+  authDomain: "bookit-51575.firebaseapp.com",
+  projectId: "bookit-51575",
+  appId: "1:304719409100:web:15f30b52ee324f00517769"
+});
+const db = getFirestore(app);
+
+const SALON = "demo";
+const today = new Date();
+const dateStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+const MONTHS_PT = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+document.getElementById('bk-date').textContent = `${today.getDate()} de ${MONTHS_PT[today.getMonth()]}`;
+
+const STATUS_LABEL = { pending:'Pendente', confirmed:'Confirmada', completed:'Concluída', cancelled:'Cancelada', noshow:'Não compareceu' };
+const STATUS_COLOR = { pending:'#a26f2b', confirmed:'#2c5bcc', completed:'#16a34a', cancelled:'#71717a', noshow:'#dc2626' };
+
+const escapeHTML = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
+
+try {
+  const q = query(
+    collection(db, "salons", SALON, "bookings"),
+    where("date","==", dateStr),
+    orderBy("time","asc")
+  );
+  onSnapshot(q, (snap) => {
+    const bks = snap.docs.map(d => d.data());
+    const active = bks.filter(b => b.status !== 'cancelled');
+    document.getElementById('bk-total').textContent     = active.length;
+    document.getElementById('bk-pending').textContent   = active.filter(b => b.status === 'pending').length;
+    document.getElementById('bk-confirmed').textContent = active.filter(b => b.status === 'confirmed').length;
+    const revenue = active.filter(b => b.paid).reduce((s,b) => s + (Number(b.finalPrice) || Number(b.servicePrice) || 0), 0);
+    document.getElementById('bk-revenue').textContent = `${revenue}€`;
+    document.getElementById('bk-status').textContent = `${active.length} marcação${active.length !== 1 ? 'ões' : ''} · em tempo real`;
+    document.getElementById('bk-status').style.background = 'rgba(22,163,74,.12)';
+    document.getElementById('bk-status').style.color = '#16a34a';
+
+    const list = document.getElementById('bk-list');
+    if (!active.length) {
+      list.innerHTML = `<div style="padding:16px; text-align:center; color:var(--muted); font-size:13px; background:rgba(40,34,26,.03); border-radius:10px">Sem marcações hoje.</div>`;
+      return;
+    }
+    list.innerHTML = `<div style="font-size:12px; font-weight:500; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; margin-bottom:8px">Cronograma</div>` +
+      active.slice(0, 8).map(b => `
+        <div style="display:flex; align-items:center; gap:14px; padding:10px 12px; border-bottom:1px solid var(--line); font-size:13px">
+          <div style="font-weight:600; font-variant-numeric:tabular-nums; min-width:42px; color:var(--text)">${escapeHTML(b.time)}</div>
+          <div style="flex:1; min-width:0">
+            <div style="font-weight:500">${escapeHTML(b.serviceName)}</div>
+            <div style="font-size:11.5px; color:var(--muted); margin-top:1px">${escapeHTML(b.clientName)}${b.staffName && b.staffName !== 'Sem preferência' ? ' · ' + escapeHTML(b.staffName) : ''}</div>
+          </div>
+          <span style="font-size:10.5px; font-weight:500; padding:2px 8px; border-radius:4px; background:${STATUS_COLOR[b.status]}1a; color:${STATUS_COLOR[b.status]}; white-space:nowrap">${escapeHTML(STATUS_LABEL[b.status] || b.status)}</span>
+          <div style="font-weight:600; font-variant-numeric:tabular-nums; min-width:42px; text-align:right">${b.finalPrice ?? b.servicePrice}€</div>
+        </div>
+      `).join('');
+    if (active.length > 8) {
+      list.innerHTML += `<div style="text-align:center; padding:10px; font-size:12px; color:var(--muted)">+${active.length - 8} mais marcações — vê todas no <a href="https://bookit-51575.web.app/admin.html" target="_blank" style="color:var(--accent); text-decoration:underline">BookIt admin</a></div>`;
+    }
+  }, (err) => {
+    console.error(err);
+    document.getElementById('bk-status').textContent = 'erro a carregar';
+    document.getElementById('bk-status').style.background = 'rgba(220,38,38,.12)';
+    document.getElementById('bk-status').style.color = '#dc2626';
+  });
+} catch (e) {
+  console.error(e);
+}
+</script>
 
 <script>
 // ── DEFAULTS ──
