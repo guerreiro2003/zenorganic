@@ -190,13 +190,16 @@ p + p { margin-top: 1.1em; }
 .header {
   position: fixed; top: 0; left: 0; right: 0; z-index: 50;
   padding: 18px 0;
-  transition: background var(--t-base), backdrop-filter var(--t-base), padding var(--t-base);
+  /* Subtle paper-tinted bg from the start so the header is always
+   * visible against any content scrolling underneath. */
+  background: rgba(242, 237, 224, .6);
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+  transition: background var(--t-base), padding var(--t-base);
 }
 .header.scrolled {
   padding: 12px 0;
-  background: rgba(242, 237, 224, .85);
-  backdrop-filter: blur(14px) saturate(160%);
-  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  background: rgba(242, 237, 224, .92);
   border-bottom: 1px solid var(--hair);
 }
 .header__inner {
@@ -291,6 +294,9 @@ p + p { margin-top: 1.1em; }
   display: flex; flex-direction: column; gap: 20px;
   animation: slide-down .4s var(--ease);
 }
+/* IMPORTANT: explicit display:flex above would override [hidden]'s
+ * default display:none in some browsers. Force it back. */
+.mobileNav[hidden] { display: none !important; }
 .mobileNav a {
   font-family: var(--serif);
   font-style: italic;
