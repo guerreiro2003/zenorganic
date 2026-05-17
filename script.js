@@ -96,39 +96,84 @@ function renderGallery() {
   observeReveal();
 }
 
-// ── EQUIPA DINÂMICA (localStorage zen_team) ──
+// ── EQUIPA DINÂMICA (lê do Firestore do salão Book It ligado) ──
+// Single source of truth: BookIt staff collection. The owner manages
+// the team (and photos) in BookIt admin; this site auto-syncs.
 function renderTeam() {
   const grid  = document.getElementById("teamGrid");
   const empty = document.getElementById("teamEmpty");
   if (!grid) return;
 
-  let team = [];
-  try {
-    const stored = localStorage.getItem("zen_team");
-    team = stored ? JSON.parse(stored) : [];
-  } catch(e) { team = []; }
+  // Renders a list (after we fetch from Firestore)
+  function paint(team) {
+    if (!team.length) {
+      grid.style.display = "none";
+      if (empty) empty.style.display = "block";
+      return;
+    }
+    grid.style.display = "";
+    if (empty) empty.style.display = "none";
 
-  if (!team.length) {
-    grid.style.display  = "none";
-    if (empty) empty.style.display = "block";
-    return;
+    const esc = (s) => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);
+
+    grid.innerHTML = team.map((m, i) => {
+      const initial = (m.name || "?").charAt(0).toUpperCase();
+      const delay   = (i * 0.07).toFixed(2);
+      const photoBlock = m.photoUrl
+        ? `<img src="${esc(m.photoUrl)}" alt="${esc(m.name)}" loading="lazy" onerror="this.style.display='none';this.parentElement.classList.add('team__photo--fallback')" />`
+        : `<div class="team__initial" aria-hidden="true">${esc(initial)}</div>`;
+      return `<article class="team__member reveal" style="--d:${delay}s">
+        <div class="team__photo">${photoBlock}</div>
+        <h3 class="team__name">${esc(m.name || "")}</h3>
+        <p class="team__role">${esc(m.role || "Colaborador/a")}</p>
+        ${m.bio ? `<p class="team__bio">${esc(m.bio)}</p>` : ""}
+      </article>`;
+    }).join("");
+
+    observeReveal();
   }
 
-  grid.style.display  = "";
-  if (empty) empty.style.display = "none";
+  // Try Firestore first (BookIt staff for the linked salon)
+  loadTeamFromBookIt().then(team => {
+    if (team !== null) {
+      paint(team);
+    } else {
+      // Fallback to localStorage if Firestore fails or no salon configured
+      let team = [];
+      try {
+        const stored = localStorage.getItem("zen_team");
+        team = stored ? JSON.parse(stored) : [];
+      } catch(e) { team = []; }
+      paint(team);
+    }
+  });
+}
 
-  grid.innerHTML = team.map((m, i) => {
-    const initial = (m.name || "?").charAt(0).toUpperCase();
-    const delay   = (i * 0.07).toFixed(2);
-    return `<div class="team-card reveal" style="--d:${delay}s">
-      <div class="team-avatar">${m.photo ? `<img src="${m.photo}" alt="${m.name}" style="width:100%;height:100%;object-fit:cover;border-radius:50%" />` : initial}</div>
-      <div class="team-name">${m.name || ""}</div>
-      <div class="team-role">${m.role || "Colaborador/a"}</div>
-      ${m.bio ? `<div class="team-bio">${m.bio}</div>` : ""}
-    </div>`;
-  }).join("");
+async function loadTeamFromBookIt() {
+  try {
+    const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js");
+    const { getFirestore, collection, getDocs, query, where, orderBy } =
+      await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
 
-  observeReveal();
+    const app = initializeApp({
+      apiKey: "AIzaSyABK6W0yTe_EQfna5_Sz7DcI9nPwvh5TNw",
+      authDomain: "bookit-51575.firebaseapp.com",
+      projectId: "bookit-51575",
+      appId: "1:304719409100:web:15f30b52ee324f00517769"
+    }, "zen-team-loader");
+    const db = getFirestore(app);
+
+    const SALON = "demo";
+    const snap = await getDocs(query(
+      collection(db, "salons", SALON, "staff"),
+      where("active","==", true),
+      orderBy("order","asc")
+    ));
+    return snap.docs.map(d => d.data());
+  } catch (e) {
+    console.warn("Could not load team from BookIt:", e);
+    return null;  // signal fallback
+  }
 }
 
 // ── ANÚNCIOS DINÂMICOS (localStorage zen_announcements) ──
