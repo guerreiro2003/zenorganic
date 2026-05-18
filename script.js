@@ -62,34 +62,36 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   });
 });
 
-// ── GALERIA DINÂMICA (localStorage zen_gallery) ──
-function renderGallery() {
+// ── GALERIA (BookIt Firestore → site_gallery) ──
+async function renderGallery() {
   const grid  = document.getElementById("galleryGrid");
   const empty = document.getElementById("galleryEmpty");
   if (!grid) return;
 
-  let photos = [];
-  try {
-    const stored = localStorage.getItem("zen_gallery");
-    photos = stored ? JSON.parse(stored) : [];
-  } catch(e) { photos = []; }
+  let photos = await loadFromBookIt("site_gallery");
+  if (photos === null) {
+    // Fallback to localStorage (legacy)
+    try {
+      const stored = localStorage.getItem("zen_gallery");
+      photos = stored ? JSON.parse(stored) : [];
+    } catch(e) { photos = []; }
+  }
 
   if (!photos.length) {
     grid.style.display  = "none";
     if (empty) empty.style.display = "block";
     return;
   }
-
   grid.style.display  = "";
   if (empty) empty.style.display = "none";
 
-  // Distribuir em classes para layout masonry (tall/wide para primeiras fotos)
-  const layoutClasses = ["gallery__item--tall", "", "", "", "gallery__item--wide"];
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);
+  const layoutClasses = ["gallery__item--feature", "", "", "", "gallery__item--wide", "", "gallery__item--tall"];
   grid.innerHTML = photos.map((p, i) => {
     const extra = i < layoutClasses.length ? layoutClasses[i] : "";
     const delay = (i * 0.06).toFixed(2);
     return `<div class="gallery__item ${extra} reveal" style="--d:${delay}s">
-      <img src="${p.url}" alt="${p.caption || 'Trabalho ' + (i+1)}" loading="lazy" />
+      <img src="${esc(p.url)}" alt="${esc(p.caption || 'Trabalho ' + (i+1))}" loading="lazy" />
     </div>`;
   }).join("");
 
@@ -149,56 +151,87 @@ function renderTeam() {
   });
 }
 
-async function loadTeamFromBookIt() {
+/* Shared Firestore reader for ZenOrganic. Lazy-loads the SDK only when first
+ * needed. Returns the array of docs, or null if anything fails (lets caller
+ * fall back to localStorage). */
+const SALON = "demo";
+let _fsCache = null;
+async function getFirestoreDb() {
+  if (_fsCache) return _fsCache;
+  const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js");
+  const fs = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+  const app = initializeApp({
+    apiKey: "AIzaSyABK6W0yTe_EQfna5_Sz7DcI9nPwvh5TNw",
+    authDomain: "bookit-51575.firebaseapp.com",
+    projectId: "bookit-51575",
+    appId: "1:304719409100:web:15f30b52ee324f00517769"
+  }, "zen-site-loader");
+  _fsCache = { db: fs.getFirestore(app), ...fs };
+  return _fsCache;
+}
+
+async function loadFromBookIt(subcollection, options = {}) {
   try {
-    const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js");
-    const { getFirestore, collection, getDocs, query, where, orderBy } =
-      await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
-
-    const app = initializeApp({
-      apiKey: "AIzaSyABK6W0yTe_EQfna5_Sz7DcI9nPwvh5TNw",
-      authDomain: "bookit-51575.firebaseapp.com",
-      projectId: "bookit-51575",
-      appId: "1:304719409100:web:15f30b52ee324f00517769"
-    }, "zen-team-loader");
-    const db = getFirestore(app);
-
-    const SALON = "demo";
-    const snap = await getDocs(query(
-      collection(db, "salons", SALON, "staff"),
-      where("active","==", true),
-      orderBy("order","asc")
+    const fs = await getFirestoreDb();
+    const constraints = [];
+    if (options.activeOnly) constraints.push(fs.where("active","==", true));
+    constraints.push(fs.orderBy(options.orderField || "order","asc"));
+    const snap = await fs.getDocs(fs.query(
+      fs.collection(fs.db, "salons", SALON, subcollection),
+      ...constraints
     ));
     return snap.docs.map(d => d.data());
   } catch (e) {
-    console.warn("Could not load team from BookIt:", e);
-    return null;  // signal fallback
+    console.warn(`[zen] Could not load ${subcollection} from BookIt:`, e.message);
+    return null;
   }
 }
 
-// ── ANÚNCIOS DINÂMICOS (localStorage zen_announcements) ──
-function renderAnnouncements() {
+async function loadTeamFromBookIt() {
+  return loadFromBookIt("staff", { activeOnly: true });
+}
+
+// ── PROMOÇÕES (BookIt Firestore → promotions, filtered active) ──
+async function renderAnnouncements() {
   const grid = document.getElementById("promos-grid");
   if (!grid) return;
 
-  let items = [];
+  // Use createdAt as fallback since promotions don't have explicit 'order'
+  let items = null;
   try {
-    const stored = localStorage.getItem("zen_announcements");
-    items = stored ? JSON.parse(stored).filter(a => a.active) : [];
-  } catch(e) { items = []; }
+    const fs = await getFirestoreDb();
+    const snap = await fs.getDocs(fs.query(
+      fs.collection(fs.db, "salons", SALON, "promotions"),
+      fs.where("active","==", true)
+    ));
+    items = snap.docs.map(d => d.data());
+  } catch (e) {
+    console.warn("[zen] promotions load failed:", e.message);
+  }
 
-  if (!items.length) return; // manter os cards estáticos por defeito
+  // localStorage fallback (legacy)
+  if (items === null) {
+    try {
+      const stored = localStorage.getItem("zen_announcements");
+      items = stored ? JSON.parse(stored).filter(a => a.active) : [];
+    } catch(e) { items = []; }
+  }
 
-  // Adicionar cards de anúncios dinâmicos após os estáticos
+  if (!items.length) return; // keep static fallback card
+
+  // Replace the static fallback if we have real items
+  grid.innerHTML = '';
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);
   items.forEach((a, i) => {
     const card = document.createElement("article");
     card.className = "promo-card reveal";
     card.style.cssText = `--d:${0.04 + i * 0.08}s`;
+    const tag = a.badgeText || a.type;
     card.innerHTML = `
-      ${a.type ? `<div class="promo-tag promo-tag--subtle">${a.type}</div>` : ""}
-      <h3>${a.title || ""}</h3>
-      <p>${a.description || ""}</p>
-      ${a.linkUrl ? `<a class="promo-link" href="${a.linkUrl}" target="_blank" rel="noopener">${a.linkText || "Saber mais"} →</a>` : ""}
+      ${tag ? `<div class="promo-tag promo-tag--subtle">${esc(tag)}</div>` : ""}
+      <h3>${esc(a.title || "")}</h3>
+      <p>${esc(a.description || "")}</p>
+      <a class="promo-link" href="https://bookit-51575.web.app/?salon=demo" target="_blank" rel="noopener">Marcar →</a>
     `;
     grid.appendChild(card);
   });
@@ -252,17 +285,19 @@ function renderHours() {
   } catch(e) {}
 }
 
-// ── PARCERIAS DINÂMICAS (localStorage zen_partners) ──
-function renderPartners() {
+// ── PARCERIAS (BookIt Firestore → site_partners) ──
+async function renderPartners() {
   const grid  = document.getElementById('partnersGrid');
   const empty = document.getElementById('partnersEmpty');
   if (!grid) return;
 
-  let partners = [];
-  try {
-    const stored = localStorage.getItem('zen_partners');
-    partners = stored ? JSON.parse(stored) : [];
-  } catch(e) { partners = []; }
+  let partners = await loadFromBookIt("site_partners");
+  if (partners === null) {
+    try {
+      const stored = localStorage.getItem('zen_partners');
+      partners = stored ? JSON.parse(stored) : [];
+    } catch(e) { partners = []; }
+  }
 
   if (!partners.length) {
     grid.style.display  = 'none';
@@ -272,11 +307,12 @@ function renderPartners() {
   grid.style.display  = '';
   if (empty) empty.style.display = 'none';
 
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);
   grid.innerHTML = partners.map((p, i) => `
     <div class="partner-card reveal" style="--d:${(i * 0.07).toFixed(2)}s">
-      <div class="partner-icon">${p.icon || '🤝'}</div>
-      <div class="partner-name">${p.name || ''}</div>
-      ${p.desc ? `<div class="partner-desc">${p.desc}</div>` : ''}
+      <div class="partner-icon">${esc(p.icon || '🤝')}</div>
+      <div class="partner-name">${esc(p.name || '')}</div>
+      ${p.desc ? `<div class="partner-desc">${esc(p.desc)}</div>` : ''}
     </div>`).join('');
 
   observeReveal();

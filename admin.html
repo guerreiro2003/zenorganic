@@ -333,18 +333,10 @@
         </button>
       </div>
       <div class="sidebar-section">
-        <span class="sidebar-label">Conteúdo</span>
-        <button class="sidebar-link" onclick="showPanel('announcements', this)">
-          <span class="icon">◉</span> Anúncios & Promoções
-        </button>
-        <button class="sidebar-link" onclick="showPanel('gallery', this)">
-          <span class="icon">◇</span> Galeria de Fotos
-        </button>
+        <span class="sidebar-label">Conteúdo do site</span>
         <button class="sidebar-link" onclick="showPanel('team', this)">
           <span class="icon">👥</span> Equipa
-        </button>
-        <button class="sidebar-link" onclick="showPanel('partners', this)">
-          <span class="icon">🤝</span> Parcerias
+          <span style="margin-left:auto; font-size:9px; letter-spacing:.1em; color: var(--muted); text-transform:uppercase">via Book It</span>
         </button>
         <button class="sidebar-link" onclick="showPanel('prices', this)">
           <span class="icon">◎</span> Tabela de Preços
@@ -352,6 +344,18 @@
         <button class="sidebar-link" onclick="showPanel('schedule', this)">
           <span class="icon">✦</span> Horários
         </button>
+      </div>
+      <div class="sidebar-section">
+        <span class="sidebar-label">Geridos no Book It admin</span>
+        <a class="sidebar-link" href="https://bookit-51575.web.app/admin.html" target="_blank" rel="noopener" style="text-decoration:none">
+          <span class="icon">◉</span> Promoções <span style="margin-left:auto; font-size:11px; color: var(--muted)">↗</span>
+        </a>
+        <a class="sidebar-link" href="https://bookit-51575.web.app/admin.html" target="_blank" rel="noopener" style="text-decoration:none">
+          <span class="icon">◇</span> Galeria <span style="margin-left:auto; font-size:11px; color: var(--muted)">↗</span>
+        </a>
+        <a class="sidebar-link" href="https://bookit-51575.web.app/admin.html" target="_blank" rel="noopener" style="text-decoration:none">
+          <span class="icon">🤝</span> Parcerias <span style="margin-left:auto; font-size:11px; color: var(--muted)">↗</span>
+        </a>
       </div>
       <div class="sidebar-section">
         <span class="sidebar-label">Configurações</span>
@@ -432,9 +436,10 @@
         <div class="admin-card">
           <h3>Ações rápidas</h3>
           <div style="display:flex; gap:10px; flex-wrap:wrap">
-            <button class="btn btn-primary" onclick="showPanel('announcements', document.querySelector('[onclick*=announcements]'))">+ Nova promoção</button>
-            <button class="btn btn-ghost"   onclick="showPanel('gallery',       document.querySelector('[onclick*=gallery]'))">+ Adicionar foto</button>
-            <button class="btn btn-ghost"   onclick="showPanel('prices',        document.querySelector('[onclick*=prices]'))">Editar preços</button>
+            <a class="btn btn-primary" href="https://bookit-51575.web.app/admin.html" target="_blank" rel="noopener" style="text-decoration:none">+ Promoção (Book It)</a>
+            <a class="btn btn-ghost"   href="https://bookit-51575.web.app/admin.html" target="_blank" rel="noopener" style="text-decoration:none">+ Foto na galeria (Book It)</a>
+            <a class="btn btn-ghost"   href="https://bookit-51575.web.app/admin.html" target="_blank" rel="noopener" style="text-decoration:none">+ Parceria (Book It)</a>
+            <button class="btn btn-ghost"   onclick="showPanel('prices', document.querySelector('[onclick*=prices]'))">Editar preços</button>
           </div>
         </div>
       </div>
