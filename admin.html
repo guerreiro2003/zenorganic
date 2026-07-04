@@ -821,8 +821,10 @@ loadTeamFromBookIt();
 
 <script>
 // ── DEFAULTS ──
+// The admin password is never stored in the clear. Only its SHA-256 digest lives
+// here; the typed password is hashed and compared. Default digest = "zen2025".
+const DEFAULT_PW_HASH = 'f7a684c46a60484677784e02e64139b4021c527609c97b8750c814045c2cbbfc';
 const DEFAULTS = {
-  password: 'zen2025',
   announcements: [],
   gallery: [],
   pricesWoman: [
@@ -863,13 +865,19 @@ const save = (k, v) => localStorage.setItem('zen_'+k, JSON.stringify(v));
 const get  = (k) => load(k) ?? DEFAULTS[k];
 
 // ── LOGIN ──
-const PASS_KEY = 'zen_admin_pw';
-function getPass() { return localStorage.getItem(PASS_KEY) || DEFAULTS.password }
+// Stores/compares only SHA-256 digests — the plain password is never persisted.
+const PASS_KEY = 'zen_admin_pw_hash';
+function getPassHash() { return localStorage.getItem(PASS_KEY) || DEFAULT_PW_HASH; }
+async function sha256Hex(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(String(str)));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
 
 document.getElementById('pwInput').addEventListener('keydown', e => { if(e.key==='Enter') doLogin() });
-function doLogin() {
+async function doLogin() {
   const pw = document.getElementById('pwInput').value;
-  if (pw === getPass()) {
+  const ok = (await sha256Hex(pw)) === getPassHash();
+  if (ok) {
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('adminApp').style.display = 'block';
     initApp();
@@ -1216,12 +1224,13 @@ function saveSettings() {
   });
   toast();
 }
-function changePassword() {
+async function changePassword() {
   const p1 = document.getElementById('new-pw').value;
   const p2 = document.getElementById('new-pw2').value;
   if (!p1) return toast('⚠️ Escreve a nova password!');
   if (p1 !== p2) return toast('⚠️ As passwords não coincidem!');
-  localStorage.setItem(PASS_KEY, p1);
+  // Persist only the digest, never the plain password.
+  localStorage.setItem(PASS_KEY, await sha256Hex(p1));
   document.getElementById('new-pw').value = '';
   document.getElementById('new-pw2').value = '';
   toast('✓ Password alterada!');

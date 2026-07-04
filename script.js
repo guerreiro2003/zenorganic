@@ -175,12 +175,14 @@ async function loadFromBookIt(subcollection, options = {}) {
     const fs = await getFirestoreDb();
     const constraints = [];
     if (options.activeOnly) constraints.push(fs.where("active","==", true));
-    constraints.push(fs.orderBy(options.orderField || "order","asc"));
+    // NB: no orderBy in the query — Firestore silently drops documents missing the
+    // field, which would hide staff/gallery items. We sort client-side instead.
     const snap = await fs.getDocs(fs.query(
       fs.collection(fs.db, "salons", SALON, subcollection),
       ...constraints
     ));
-    return snap.docs.map(d => d.data());
+    const field = options.orderField || "order";
+    return snap.docs.map(d => d.data()).sort((a, b) => (a[field] ?? 9999) - (b[field] ?? 9999));
   } catch (e) {
     console.warn(`[zen] Could not load ${subcollection} from BookIt:`, e.message);
     return null;
@@ -238,33 +240,23 @@ async function renderAnnouncements() {
   observeReveal();
 }
 
-// ── PREÇOS DINÂMICOS (localStorage) ──
-function renderPrices() {
-  const womanList = document.getElementById("prices-woman-list");
-  const manList   = document.getElementById("prices-man-list");
+// ── PREÇOS ──
+// The static price list in the HTML is the source of truth for the marketing
+// page and already mirrors the salon's services. We no longer override it from
+// per-browser localStorage (which could show stale prices on one device only).
+function renderPrices() { /* static list in index.html */ }
 
-  try {
-    const storedW = localStorage.getItem("zen_prices_woman");
-    const storedM = localStorage.getItem("zen_prices_man");
-    if (storedW && womanList) {
-      const items = JSON.parse(storedW);
-      womanList.innerHTML = items.map(p => `<li><span>${p.name}</span><strong>${p.price}</strong></li>`).join("");
-    }
-    if (storedM && manList) {
-      const items = JSON.parse(storedM);
-      manList.innerHTML = items.map(p => `<li><span>${p.name}</span><strong>${p.price}</strong></li>`).join("");
-    }
-  } catch(e) {}
-}
-
-// ── HORÁRIOS DINÂMICOS (localStorage) ──
-function renderHours() {
+// ── HORÁRIOS (Firestore — mesma fonte que a app de marcações) ──
+// Reads the real salon schedule so the opening hours on the site can never drift
+// from what the booking system enforces.
+async function renderHours() {
   const list = document.getElementById("hours-list");
   if (!list) return;
   try {
-    const stored = localStorage.getItem("zen_schedule");
-    if (!stored) return;
-    const sched = JSON.parse(stored);
+    const fs = await getFirestoreDb();
+    const snap = await fs.getDoc(fs.doc(fs.db, "salons", SALON, "config", "schedule"));
+    if (!snap.exists()) return; // keep the static fallback in the HTML
+    const sched = snap.data();
     const DAYS = [
       { key:"monday",    label:"Segunda" },
       { key:"tuesday",   label:"Terça" },
@@ -274,15 +266,13 @@ function renderHours() {
       { key:"saturday",  label:"Sábado" },
       { key:"sunday",    label:"Domingo" },
     ];
-    // Agrupar dias consecutivos com mesmo horário
-    let html = "";
-    const active = DAYS.filter(d => sched[d.key]);
-    active.forEach(d => {
+    const html = DAYS.filter(d => sched[d.key]).map(d => {
       const v = sched[d.key];
-      html += `<li><span>${d.label}</span><strong>${v.closed ? "Fechado" : `${v.open} – ${v.close}`}</strong></li>`;
-    });
+      const val = v.closed ? "Fechado" : `${v.open} – ${v.close}`;
+      return `<li><span>${d.label}</span><strong>${val}</strong></li>`;
+    }).join("");
     if (html) list.innerHTML = html;
-  } catch(e) {}
+  } catch(e) { /* keep static fallback */ }
 }
 
 // ── PARCERIAS (BookIt Firestore → site_partners) ──
